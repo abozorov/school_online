@@ -16,11 +16,11 @@ const (
 	ClassroomUpdate = "classroom:update"
 	ClassroomDelete = "classroom:delete"
 
-	ScheduleView   = "schedule:view"
-	ScheduleList   = "schedule:list"
-	ScheduleCreate = "schedule:create"
-	ScheduleUpdate = "schedule:update"
-	ScheduleDelete = "schedule:delete"
+	ScheduleClassroomView = "schedule:classroom-view"
+	ScheduleTeacherView   = "schedule:teacher-view"
+	ScheduleCreate        = "schedule:create"
+	ScheduleUpdate        = "schedule:update"
+	ScheduleDelete        = "schedule:delete"
 
 	JournalStudentViewMe    = "journalStudent:view-me"
 	JournalStudentView      = "journalStudent:view"

@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	UserService_Get_FullMethodName           = "/school_online.user.v1.UserService/Get"
+	UserService_GetByEmail_FullMethodName    = "/school_online.user.v1.UserService/GetByEmail"
 	UserService_GetAll_FullMethodName        = "/school_online.user.v1.UserService/GetAll"
 	UserService_Create_FullMethodName        = "/school_online.user.v1.UserService/Create"
 	UserService_Update_FullMethodName        = "/school_online.user.v1.UserService/Update"
@@ -33,6 +34,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Get(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	GetByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	GetAll(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error)
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
@@ -53,6 +55,16 @@ func (c *userServiceClient) Get(ctx context.Context, in *GetUserRequest, opts ..
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserResponse)
 	err := c.cc.Invoke(ctx, UserService_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserResponse)
+	err := c.cc.Invoke(ctx, UserService_GetByEmail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -124,6 +136,7 @@ func (c *userServiceClient) UpdateSubject(ctx context.Context, in *UpdateSubject
 // for forward compatibility.
 type UserServiceServer interface {
 	Get(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	GetByEmail(context.Context, *GetByEmailRequest) (*GetUserResponse, error)
 	GetAll(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error)
 	Create(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	Update(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
@@ -142,6 +155,9 @@ type UnimplementedUserServiceServer struct{}
 
 func (UnimplementedUserServiceServer) Get(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedUserServiceServer) GetByEmail(context.Context, *GetByEmailRequest) (*GetUserResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetByEmail not implemented")
 }
 func (UnimplementedUserServiceServer) GetAll(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAll not implemented")
@@ -196,6 +212,24 @@ func _UserService_Get_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Get(ctx, req.(*GetUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetByEmailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetByEmail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetByEmail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetByEmail(ctx, req.(*GetByEmailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -318,6 +352,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _UserService_Get_Handler,
+		},
+		{
+			MethodName: "GetByEmail",
+			Handler:    _UserService_GetByEmail_Handler,
 		},
 		{
 			MethodName: "GetAll",

@@ -1,9 +1,9 @@
 package permission
 
 const (
-	Stuff   = "stuff"
+	Staff   = "staff"
 	Student = "student"
-	Parrent = "parrent"
+	Parent  = "parent"
 	Teacher = "teacher"
 	User    = "user"
 )

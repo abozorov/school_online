@@ -7,12 +7,17 @@ option go_package = "github.com/abozorov/school_online/grpc_api/user;v1";
 
 service UserService {
         rpc Get(GetUserRequest) returns (GetUserResponse);
+        rpc GetByEmail(GetByEmailRequest) returns (GetUserResponse);
         rpc GetAll(GetAllUsersRequest) returns (GetAllUsersResponse);
         rpc Create(CreateUserRequest) returns (CreateUserResponse);
         rpc Update(UpdateUserRequest) returns (UpdateUserResponse);
         rpc Delete(DeleteUserRequest) returns (DeleteUserResponse);
         rpc CreateSubject(CreateSubjectRequest) returns (CreateSubjectResponse);
         rpc UpdateSubject(UpdateSubjectRequest) returns (UpdateSubjectResponse);
+}
+
+message GetByEmailRequest {
+        string email = 1;
 }
 
 message UpdateSubjectRequest {
@@ -48,7 +53,7 @@ message UpdateUserRequest {
         optional string role = 5;
         optional string birthday = 6;
         optional Student student = 7;
-        optional Parrent parrent = 8;
+        optional Parent parent = 8;
         optional Stuff stuff = 9;
         optional Teacher teacher = 10;
 }
@@ -60,13 +65,14 @@ message CreateUserRequest {
         string name = 1;
         string username = 2;
         string email = 3;
-        string phone_number = 4;
-        string role = 5;
-        string birthday = 6;
-        Student student = 7;
-        Parrent parrent = 8;
-        Stuff stuff = 9;
-        Teacher teacher = 10;
+        string password = 4;
+        string phone_number = 5;
+        string role = 6;
+        string birthday = 7;
+        Student student = 8;
+        Parent parent = 9;
+        Stuff stuff = 10;
+        Teacher teacher = 11;
 }
 
 message CreateUserResponse {
@@ -89,36 +95,30 @@ message GetUserResponse {
         string name = 2;
         string username = 3;
         string email = 4;
-        string phone_number = 5;
-        string role = 6;
-        string birthday = 7;
-        Student student = 8;
-        Parrent parrent = 9;
-        Stuff stuff = 10;
-        Teacher teacher = 11;
+        bool verify_email = 5;
+        string password = 6;
+        string phone_number = 7;
+        string role = 8;
+        string birthday = 9;
+        Student student = 10;
+        Parent parent = 11;
+        Stuff stuff = 12;
+        Teacher teacher = 13;
 }
 message Student {
-        int32 id = 1;
-        int32 class_is = 2;
-        int32 user_if = 3;
+        int32 class_id = 1;
 }
 
-message Parrent {
-        int32 id = 1;
-        repeated int32 students_id = 2;
-        int32 user_id = 3;
+message Parent {
+        repeated int32 students_id = 1;
 }
 
 message Stuff {
-        int32 id = 1;
-        string position = 2;
-        int32 user_id = 3;
-        int32 experience = 4;
+        string position = 1;
+        int32 experience = 2;
 }
 
 message Teacher {
-        int32 id = 1;
-        repeated int32 subjects_id = 2;
-        int32 user_id = 3;
-        int32 experience = 4;
+        repeated int32 subjects_id = 1;
+        int32 experience = 2;
 }

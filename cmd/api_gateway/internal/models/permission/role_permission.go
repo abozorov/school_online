@@ -1,19 +1,13 @@
 package permission
 
 var RolePermission = map[string]map[string]struct{}{
-	Stuff: {
-		
-	},
+	Staff: {},
 
-	Student: {
-		
-	},
+	Student: {},
 
-	Parrent: {
+	Parent: {},
 
-	},
+	Teacher: {},
 
-	Teacher: {
-		
-	},
+	User: {},
 }
