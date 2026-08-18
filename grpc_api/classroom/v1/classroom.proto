@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package school_online.classroom.v1;
+
+option go_package = "github.com/abozorov/school_online/grpc_api/classroom;v1";
+
+service ClassroomService {
+
+  rpc GetClassroom(GetClassroomRequest) returns (ClassroomResponse);
+  rpc ListClassrooms(ListClassroomsRequest) returns (ListClassroomsResponse);
+  rpc CreateClassroom(CreateClassroomRequest) returns (CreateClassroomResponse);
+  rpc UpdateClassroom(UpdateClassroomRequest) returns (UpdateClassroomResponse);
+  rpc DeleteClassroom(DeleteClassroomRequest) returns (DeleteClassroomResponse);
+
+
+  rpc GetScheduleByClassroom(GetScheduleByClassroomRequest) returns (ScheduleList);
+  rpc GetScheduleByTeacher(GetScheduleByTeacherRequest) returns (ScheduleList);
+  rpc CreateSchedule(CreateScheduleRequest) returns (CreateScheduleResponse);
+  rpc UpdateSchedule(UpdateScheduleRequest) returns (UpdateScheduleResponse);
+  rpc DeleteSchedule(DeleteScheduleRequest) returns (DeleteScheduleResponse);
+}
+
+message GetClassroomRequest {
+        int32 id = 1;
+}
+
+message ClassroomResponse {
+        int32 id = 1;
+        int32 grade_number = 2;          // номер класса, напр. 9
+        string letter = 3;               // буква класса, напр. "А"
+        int32 hometown_teacher_id = 4;   // id классного руководителя
+        int32 academic_year = 5;         // учебный год
+}
+
+message ListClassroomsRequest {
+        int32 page = 1;
+        int32 limit = 2;
+}
+
+message ListClassroomsResponse {
+        repeated ClassroomResponse classrooms = 1;
+}
+
+message CreateClassroomRequest {
+        int32 grade_number = 1;
+        string letter = 2;
+        int32 hometown_teacher_id = 3;
+        int32 academic_year = 4;
+}
+
+message CreateClassroomResponse {
+        int32 id = 1;
+}
+
+message UpdateClassroomRequest {
+        int32 id = 1;
+        optional int32 grade_number = 2;
+        optional string letter = 3;
+        optional int32 hometown_teacher_id = 4;
+        optional int32 academic_year = 5;
+}
+
+message UpdateClassroomResponse {
+        int32 id = 1;
+}
+
+message DeleteClassroomRequest {
+        int32 id = 1;
+}
+
+message DeleteClassroomResponse {
+}
+
+message GetScheduleByClassroomRequest {
+        int32 class_id = 1;
+}
+
+message ScheduleList {
+        repeated ScheduleResponse schedules = 1;
+}
+
+message GetScheduleByTeacherRequest {
+        int32 teacher_id = 1;
+}
+
+message ScheduleResponse {
+        int32 id = 1;
+        int32 class_id = 2;
+        int32 subject_id = 3;
+        int32 teacher_id = 4;
+        int32 day_of_week = 5;
+        int32 lesson_number = 6;
+        int32 room = 7;
+        int32 academic_year = 8;
+}
+
+message CreateScheduleRequest {
+        int32 class_id = 1;
+        int32 subject_id = 2;
+        int32 teacher_id = 3;
+        int32 day_of_week = 4;
+        int32 lesson_number = 5;
+        int32 room = 6;
+        int32 academic_year = 7;
+}
+
+message CreateScheduleResponse {
+        int32 class_id = 1;
+}
+
+message UpdateScheduleRequest {
+        int32 id = 1;
+        optional int32 class_id = 2;
+        optional int32 subject_id = 3;
+        optional int32 teacher_id = 4;
+        optional int32 day_of_week = 5;
+        optional int32 lesson_number = 6;
+        optional int32 room = 7;
+        optional int32 academic_year = 8;
+}
+
+message UpdateScheduleResponse {
+        int32 class_id = 1;
+}
+
+message DeleteScheduleRequest {
+        int32 id = 1;
+}
+
+message DeleteScheduleResponse {
+}

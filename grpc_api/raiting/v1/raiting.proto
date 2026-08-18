@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package school_online.raiting.v1;
+
+option go_package = "github.com/abozorov/school_online/grpc_api/raiting;v1";
+
+service RaitingService {
+        rpc GetStudentJournal(GetJournalRequest) returns (GetStudentJournalResponse);
+        rpc GetClassroomJournal(GetJournalRequest) returns (GetClassroomJournalResponse);
+        rpc UpdateGrade(UpdateJournalRequest) returns (UpdateJournalResponse);
+}
+
+message UpdateJournalRequest {
+        int32 class_id = 1;
+        optional int32 subject_id = 2;
+        optional int32 teacher_id = 3;
+        optional int32 lesson_number = 4;
+        optional bool attendence = 5;
+        optional int32 grade = 6;
+        optional string homework = 7;
+}
+
+message UpdateJournalResponse {
+}
+
+message GetClassroomJournalResponse {
+        map<string, Students> classroom_journal = 1;
+}
+
+message Students {
+        map<string, StudentGrades> grades = 1;
+}
+
+message GetJournalRequest {
+        int32 id = 1;
+        string period = 2;
+}
+
+message GetStudentJournalResponse {
+        map<string, StudentGrades> student_journal = 1;
+}
+
+message StudentGrades {
+        map<string, string> grades = 1;
+}

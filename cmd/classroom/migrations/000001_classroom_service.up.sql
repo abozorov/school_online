@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "class" (
+CREATE TABLE IF NOT EXISTS "classroom" (
   "id" SERIAL NOT NULL,
   "grade_number" INT,
   "letter" VARCHAR(1),
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "class" (
 
 CREATE TABLE IF NOT EXISTS "schedule" (
   "id" SERIAL NOT NULL,
-  "class_id" INT,
+  "classroom_id" INT,
   "subject_id" INT,
   "teacher_id" INT,
   "day_of_week" INT,
@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS "schedule" (
   "room" INT,
   "academic_yeart" INT,
   PRIMARY KEY ("id"),
-  FOREIGN KEY ("class_id") REFERENCES "class"("id") ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY ("classroom_id") REFERENCES "classroom"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
