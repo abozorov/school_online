@@ -51,7 +51,7 @@ func NewRouter(opt *Option) *gin.Engine {
 	)
 
 	userApi.PATCH(
-		"/:id",
+		"",
 		opt.Middleware.RBAC(permission.UserUpdate),
 		opt.Handler.UpdateById,
 	)
@@ -90,7 +90,7 @@ func NewRouter(opt *Option) *gin.Engine {
 	)
 	
 	classroomApi.PATCH(
-		"/:id",
+		"",
 		opt.Middleware.RBAC(permission.ClassroomUpdate),
 		opt.Handler.UpdateClassroomById,
 	)
@@ -123,7 +123,7 @@ func NewRouter(opt *Option) *gin.Engine {
 	)
 	
 	scheduleApi.PATCH(
-		"/:id",
+		"",
 		opt.Middleware.RBAC(permission.ScheduleUpdate),
 		opt.Handler.UpdateScheduleById,
 	)

@@ -29,7 +29,7 @@ message ClassroomResponse {
         int32 grade_number = 2;          // номер класса, напр. 9
         string letter = 3;               // буква класса, напр. "А"
         int32 hometown_teacher_id = 4;   // id классного руководителя
-        int32 academic_year = 5;         // учебный год
+        string academic_year = 5;         // учебный год
 }
 
 message ListClassroomsRequest {
@@ -45,7 +45,7 @@ message CreateClassroomRequest {
         int32 grade_number = 1;
         string letter = 2;
         int32 hometown_teacher_id = 3;
-        int32 academic_year = 4;
+        string academic_year = 4;
 }
 
 message CreateClassroomResponse {
@@ -57,7 +57,7 @@ message UpdateClassroomRequest {
         optional int32 grade_number = 2;
         optional string letter = 3;
         optional int32 hometown_teacher_id = 4;
-        optional int32 academic_year = 5;
+        optional string academic_year = 5;
 }
 
 message UpdateClassroomResponse {
@@ -91,7 +91,7 @@ message ScheduleResponse {
         int32 day_of_week = 5;
         int32 lesson_number = 6;
         int32 room = 7;
-        int32 academic_year = 8;
+        string academic_year = 8;
 }
 
 message CreateScheduleRequest {
@@ -101,7 +101,7 @@ message CreateScheduleRequest {
         int32 day_of_week = 4;
         int32 lesson_number = 5;
         int32 room = 6;
-        int32 academic_year = 7;
+        string academic_year = 7;
 }
 
 message CreateScheduleResponse {
@@ -116,7 +116,7 @@ message UpdateScheduleRequest {
         optional int32 day_of_week = 5;
         optional int32 lesson_number = 6;
         optional int32 room = 7;
-        optional int32 academic_year = 8;
+        optional string academic_year = 8;
 }
 
 message UpdateScheduleResponse {

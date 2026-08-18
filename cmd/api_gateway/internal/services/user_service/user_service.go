@@ -39,7 +39,7 @@ func NewUserService(
 func (u *UserService) Login(ctx context.Context, request models.LoginRequest) (*models.Tokens, error) {
 	err := request.Validate()
 	if err != nil {
-		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", err)
+		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w: %w", errs.ErrBadRequestBody, err)
 	}
 
 	// get user by email
@@ -142,7 +142,7 @@ func (u *UserService) List(ctx context.Context) ([]*models.User, error) {
 func (u *UserService) Create(ctx context.Context, request models.RegisterUserRequest) (int32, error) {
 	err := models.ValidateRegisterRequest(request)
 	if err != nil {
-		return 0, fmt.Errorf("user_service.Create: %w", err)
+		return 0, fmt.Errorf("user_service.Create: %w: %w", errs.ErrBadRequestBody, err)
 	}
 
 	// hash password
@@ -195,7 +195,7 @@ func (u *UserService) Create(ctx context.Context, request models.RegisterUserReq
 func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserRequest) error {
 	err := models.ValidateID(request.ID)
 	if err != nil {
-		return fmt.Errorf("user_service.UpdateByID: %w", err)
+		return fmt.Errorf("user_service.UpdateByID: %w: %w", errs.ErrBadRequestBody, err)
 	}
 
 	// update user
@@ -243,7 +243,7 @@ func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserR
 func (u *UserService) DeleteByID(ctx context.Context, id int) error {
 	err := models.ValidateID(int32(id))
 	if err != nil {
-		return fmt.Errorf("user_service.DeleteByID: %w", err)
+		return fmt.Errorf("user_service.DeleteByID: %w: %w", errs.ErrBadRequestBody, err)
 	}
 
 	_, err = u.serviceManager.UserService().Delete(ctx, &userv1.DeleteUserRequest{

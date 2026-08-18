@@ -7,9 +7,9 @@ import (
 	userv1 "github.com/abozorov/school_online/grpc_api/generate/userpb/user/v1"
 )
 
-func (u *UserService) CreateSubject(ctx context.Context, request models.Subject) (*models.Subject, error) {
+func (u *UserService) CreateSubject(ctx context.Context, request models.CreateSubjectRequest) (*models.Subject, error) {
 	// validate request
-	if err := models.ValidateSubject(&request); err != nil {
+	if err := models.ValidateCreateSubjectRequest(&request); err != nil {
 		return &models.Subject{}, err
 	}
 

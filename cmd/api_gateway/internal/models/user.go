@@ -2,14 +2,11 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"net/mail"
 	"strings"
 	"time"
 	"unicode"
 	"unicode/utf8"
-
-	"github.com/abozorov/school_online/pkg/errs"
 )
 
 type User struct {
@@ -79,19 +76,19 @@ type TeacherRole struct {
 }
 
 var (
-	errInvalidID          = errors.New("invalid id")
-	errInvalidName        = errors.New("invalid name")
-	errInvalidUsername    = errors.New("invalid username")
-	errInvalidEmail       = errors.New("invalid email")
-	errInvalidPhoneNumber = errors.New("invalid phone number")
-	errInvalidPassword    = errors.New("invalid password")
-	errInvalidBirthday    = errors.New("invalid birthday")
-	errInvalidRole        = errors.New("invalid role")
+	ErrInvalidID          = errors.New("invalid id")
+	ErrInvalidName        = errors.New("invalid name")
+	ErrInvalidUsername    = errors.New("invalid username")
+	ErrInvalidEmail       = errors.New("invalid email")
+	ErrInvalidPhoneNumber = errors.New("invalid phone number")
+	ErrInvalidPassword    = errors.New("invalid password")
+	ErrInvalidBirthday    = errors.New("invalid birthday")
+	ErrInvalidRole        = errors.New("invalid role")
 )
 
 func ValidateID(id int32) error {
 	if id <= 0 {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidID)
+		return ErrInvalidID
 	}
 
 	return nil
@@ -101,13 +98,13 @@ func ValidateName(name *string) error {
 	*name = strings.TrimSpace(*name)
 
 	if *name == "" {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidName)
+		return ErrInvalidName
 	}
 
 	length := utf8.RuneCountInString(*name)
 
 	if length < 2 || length > 100 {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidName)
+		return ErrInvalidName
 	}
 
 	return nil
@@ -117,7 +114,7 @@ func ValidateUsername(username *string) error {
 	*username = strings.TrimSpace(*username)
 
 	if len(*username) < 3 || len(*username) > 100 {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidUsername)
+		return ErrInvalidUsername
 	}
 
 	for _, r := range *username {
@@ -125,7 +122,7 @@ func ValidateUsername(username *string) error {
 			(r >= 'A' && r <= 'Z') ||
 			(r >= '0' && r <= '9') ||
 			r == '_') {
-			return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidUsername)
+			return ErrInvalidUsername
 		}
 	}
 
@@ -136,16 +133,16 @@ func ValidateEmail(email *string) error {
 	*email = strings.TrimSpace(*email)
 
 	if *email == "" {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidEmail)
+		return ErrInvalidEmail
 	}
 
 	if len(*email) > 100 {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidEmail)
+		return ErrInvalidEmail
 	}
 
 	_, err := mail.ParseAddress(*email)
 	if err != nil {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidEmail)
+		return ErrInvalidEmail
 	}
 
 	return nil
@@ -157,12 +154,12 @@ func ValidatePhoneNumber(phone *string) error {
 	}
 
 	if len(*phone) < 10 || len(*phone) > 12 {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidPhoneNumber)
+		return ErrInvalidPhoneNumber
 	}
 
 	for _, r := range *phone {
 		if r < '0' || r > '9' {
-			return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidPhoneNumber)
+			return ErrInvalidPhoneNumber
 		}
 	}
 
@@ -172,7 +169,7 @@ func ValidatePhoneNumber(phone *string) error {
 func ValidatePassword(password string) error {
 	// bcrypt has a 72-byte limit.
 	if len(password) < 8 || len(password) > 72 {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidPassword)
+		return ErrInvalidPassword
 	}
 
 	var hasLetter bool
@@ -189,7 +186,7 @@ func ValidatePassword(password string) error {
 	}
 
 	if !hasLetter || !hasDigit {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidPassword)
+		return ErrInvalidPassword
 	}
 
 	return nil
@@ -199,14 +196,14 @@ func ValidateBirthday(birthday *string) error {
 
 	birthDate, err := time.Parse("02-01-2006", *birthday)
 	if err != nil {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidBirthday)
+		return ErrInvalidBirthday
 	}
 
 	now := time.Now()
 
 	// Birthday cannot be in the future.
 	if birthDate.After(now) {
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidBirthday)
+		return ErrInvalidBirthday
 	}
 
 	return nil
@@ -226,7 +223,7 @@ func ValidateRole(role *string) error {
 		return nil
 
 	default:
-		return fmt.Errorf("%w: %w", errs.ErrBadRequestBody, errInvalidRole)
+		return ErrInvalidRole
 	}
 }
 

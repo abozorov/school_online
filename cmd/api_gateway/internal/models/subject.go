@@ -17,40 +17,40 @@ type CreateSubjectRequest struct {
 	Description string `json:"description"`
 }
 
-func ValidateSubjectName(name string) error {
-	name = strings.TrimSpace(name)
-	if name == "" {
+func ValidateSubjectName(name *string) error {
+	*name = strings.TrimSpace(*name)
+	if *name == "" {
 		return errs.ErrBadRequestBody
 	}
 	return nil
 }
 
-func ValidateSubjectDescription(description string) error {
-	description = strings.TrimSpace(description)
-	if description == "" {
+func ValidateSubjectDescription(description *string) error {
+	*description = strings.TrimSpace(*description)
+	if *description == "" {
 		return errs.ErrBadRequestBody
 	}
 	return nil
 }
 
 func ValidateSubject(s *Subject) error {
-	if err := ValidateSubjectName(s.Name); err != nil {
+	if err := ValidateSubjectName(&s.Name); err != nil {
 		return err
 	}
 
-	if err := ValidateSubjectDescription(s.Description); err != nil {
+	if err := ValidateSubjectDescription(&s.Description); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func ValidateCreateSubjectRequest(req CreateSubjectRequest) error {
-	if err := ValidateSubjectName(req.Name); err != nil {
+func ValidateCreateSubjectRequest(req *CreateSubjectRequest) error {
+	if err := ValidateSubjectName(&req.Name); err != nil {
 		return err
 	}
 
-	if err := ValidateSubjectDescription(req.Description); err != nil {
+	if err := ValidateSubjectDescription(&req.Description); err != nil {
 		return err
 	}
 
