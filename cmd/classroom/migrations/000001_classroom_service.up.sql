@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "classroom" (
   "id" SERIAL NOT NULL,
   "grade_number" INT NOT NULL,
-  "letter" VARCHAR(1),
+  "letter" VARCHAR(1) NOT NULL,
   "hometown_teacher_id" INT,
   "academic_year" VARCHAR(6) NOT NULL,
   PRIMARY KEY ("id")

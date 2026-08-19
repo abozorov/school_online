@@ -33,7 +33,7 @@ func (c *ClassroomService) GetScheduleByClassroomId(ctx context.Context, classro
 			TeacherID:    s.GetTeacherId(),
 			DayOfWeek:    s.GetDayOfWeek(),
 			LessonNumber: s.GetLessonNumber(),
-			Room:         s.GetRoom(),
+			Room:         &s.Room,
 			AcademicYear: s.GetAcademicYear(),
 		}
 	}
@@ -65,7 +65,7 @@ func (c *ClassroomService) GetScheduleByTeacherId(ctx context.Context, teacherId
 			TeacherID:    s.GetTeacherId(),
 			DayOfWeek:    s.GetDayOfWeek(),
 			LessonNumber: s.GetLessonNumber(),
-			Room:         s.GetRoom(),
+			Room:         &s.Room,
 			AcademicYear: s.GetAcademicYear(),
 		}
 	}
@@ -87,7 +87,7 @@ func (c *ClassroomService) CreateSchedule(ctx context.Context, request models.Sc
 		TeacherId:    request.TeacherID,
 		DayOfWeek:    request.DayOfWeek,
 		LessonNumber: request.LessonNumber,
-		Room:         request.Room,
+		Room:         *request.Room,
 		AcademicYear: request.AcademicYear,
 	})
 	if err != nil {
@@ -112,7 +112,7 @@ func (c *ClassroomService) UpdateScheduleById(ctx context.Context, request model
 		TeacherId:    &request.TeacherID,
 		DayOfWeek:    &request.DayOfWeek,
 		LessonNumber: &request.LessonNumber,
-		Room:         &request.Room,
+		Room:         request.Room,
 		AcademicYear: &request.AcademicYear,
 	})
 	if err != nil {

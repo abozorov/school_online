@@ -10,6 +10,17 @@ import (
 	"go.uber.org/zap"
 )
 
+// GetById godoc
+// @Summary Get user by ID
+// @Tags User
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /api/user/{id} [get]
 func (h *Handler) GetById(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -31,6 +42,14 @@ func (h *Handler) GetById(c *gin.Context) {
 	c.JSON(http.StatusOK, usr)
 }
 
+// List godoc
+// @Summary List users
+// @Tags User
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} models.User
+// @Failure 401 {object} map[string]string
+// @Router /api/user/list [get]
 func (h *Handler) List(c *gin.Context) {
 	// get list
 	users, err := h.userService.List(c.Request.Context())
@@ -44,6 +63,17 @@ func (h *Handler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+// Create godoc
+// @Summary Create user
+// @Tags User
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body models.RegisterUserRequest true "User data"
+// @Success 201 {object} map[string]int32
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/user [post]
 func (h *Handler) Create(c *gin.Context) {
 	var req models.RegisterUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -64,6 +94,17 @@ func (h *Handler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"id": id})
 }
 
+// UpdateById godoc
+// @Summary Update user
+// @Tags User
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body models.UpdateUserRequest true "Updated user data"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/user [patch]
 func (h *Handler) UpdateById(c *gin.Context) {
 
 	var req models.UpdateUserRequest
@@ -85,6 +126,16 @@ func (h *Handler) UpdateById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "user updated"})
 }
 
+// DeleteById godoc
+// @Summary Delete user by ID
+// @Tags User
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/user/{id} [delete]
 func (h *Handler) DeleteById(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)

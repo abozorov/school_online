@@ -9,6 +9,17 @@ import (
 	"go.uber.org/zap"
 )
 
+// Login godoc
+// @Summary Login user
+// @Tags Auth
+// @Description Authenticate user and return JWT and refresh tokens.
+// @Accept json
+// @Produce json
+// @Param request body models.LoginRequest true "Login credentials"
+// @Success 200 {object} models.Tokens
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/auth/login [post]
 func (h *Handler) Login(c *gin.Context) {
 	// get email & password
 	var req models.LoginRequest

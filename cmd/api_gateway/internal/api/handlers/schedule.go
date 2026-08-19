@@ -10,6 +10,16 @@ import (
 	"go.uber.org/zap"
 )
 
+// GetScheduleByClassroomId godoc
+// @Summary Get schedule by classroom ID
+// @Tags Schedule
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Classroom ID"
+// @Success 200 {array} models.Schedule
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/schedule/classroom/{id} [get]
 func (h *Handler) GetScheduleByClassroomId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -31,6 +41,16 @@ func (h *Handler) GetScheduleByClassroomId(c *gin.Context) {
 	c.JSON(http.StatusOK, schedule)
 }
 
+// GetScheduleByTeacherId godoc
+// @Summary Get schedule by teacher ID
+// @Tags Schedule
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Teacher ID"
+// @Success 200 {array} models.Schedule
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/schedule/teacher/{id} [get]
 func (h *Handler) GetScheduleByTeacherId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -52,6 +72,17 @@ func (h *Handler) GetScheduleByTeacherId(c *gin.Context) {
 	c.JSON(http.StatusOK, schedule)
 }
 
+// CreateSchedule godoc
+// @Summary Create schedule
+// @Tags Schedule
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body models.ScheduleRequest true "Schedule data"
+// @Success 200 {object} map[string]int32
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/schedule [post]
 func (h *Handler) CreateSchedule(c *gin.Context) {
 	var req models.ScheduleRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -72,6 +103,17 @@ func (h *Handler) CreateSchedule(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
 
+// UpdateScheduleById godoc
+// @Summary Update schedule
+// @Tags Schedule
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body models.Schedule true "Updated schedule data"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/schedule [patch]
 func (h *Handler) UpdateScheduleById(c *gin.Context) {
 	var req models.Schedule
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -92,6 +134,16 @@ func (h *Handler) UpdateScheduleById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Schedule updated successfully"})
 }
 
+// DeleteScheduleById godoc
+// @Summary Delete schedule by ID
+// @Tags Schedule
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Schedule ID"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/schedule/{id} [delete]
 func (h *Handler) DeleteScheduleById(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)

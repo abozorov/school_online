@@ -76,9 +76,9 @@ func (r *RaitingService) UpdateJournal(ctx context.Context, req models.Journal) 
 		SubjectId:  req.SubjectID,
 		Date:       req.Date.Format("02.01.2026"),
 		StudentId:  req.StudentID,
-		Attendance: &req.Attendance,
-		Grade:      &req.Grade,
-		Homework:   &req.Homework,
+		Attendance: req.Attendance,
+		Grade:      req.Grade,
+		Homework:   req.Homework,
 	})
 	if err != nil {
 		return fmt.Errorf("raiting_service.UpdateJournal: %w", err)

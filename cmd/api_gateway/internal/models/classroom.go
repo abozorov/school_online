@@ -13,14 +13,14 @@ type Classroom struct {
 	ID                int32  `json:"id"`
 	GradeNumber       int32  `json:"grade_number"`
 	Letter            string `json:"letter,omitempty"`
-	HometownTeacherID int32  `json:"hometown_teacher_id,omitempty"`
+	HometownTeacherID *int32  `json:"hometown_teacher_id,omitempty"`
 	AcademicYear      string `json:"academic_year"`
 }
 
 type ClassroomRequest struct {
 	GradeNumber       int32  `json:"grade_number"`
 	Letter            string `json:"letter,omitempty"`
-	HometownTeacherID int32  `json:"hometown_teacher_id,omitempty"`
+	HometownTeacherID *int32  `json:"hometown_teacher_id,omitempty"`
 	AcademicYear      string `json:"academic_year"`
 }
 
@@ -48,22 +48,26 @@ func ValidateGradeNumber(grade int32) error {
 	return nil
 }
 
-func ValidateClassroomLetter(letter *string) error {
-	*letter = strings.TrimSpace(*letter)
+func ValidateClassroomLetter(letter string) error {
+	letter = strings.TrimSpace(letter)
 
-	if *letter == "" {
+	if letter == "" {
 		return ErrInvalidClassroomLetter
 	}
 
-	if utf8.RuneCountInString(*letter) != 1 {
+	if utf8.RuneCountInString(letter) != 1 {
 		return ErrInvalidClassroomLetter
 	}
 
 	return nil
 }
 
-func ValidateTeacherID(id int32) error {
-	if id <= 0 {
+func ValidateTeacherID(id *int32) error {
+	if id == nil {
+		return nil
+	}
+
+	if *id <= 0 {
 		return ErrInvalidTeacherID
 	}
 
@@ -72,15 +76,15 @@ func ValidateTeacherID(id int32) error {
 
 var academicYearRegex = regexp.MustCompile(`^(20[0-9]{2})\.[0-9]$`)
 
-func ValidateAcademicYear(year *string) error {
-	*year = strings.TrimSpace(*year)
+func ValidateAcademicYear(year string) error {
+	year = strings.TrimSpace(year)
 
-	if !academicYearRegex.MatchString(*year) {
+	if !academicYearRegex.MatchString(year) {
 		return ErrInvalidAcademicYear
 	}
 
 	// Получаем часть до точки.
-	yearNumber, err := strconv.Atoi((*year)[:4])
+	yearNumber, err := strconv.Atoi((year)[:4])
 	if err != nil {
 		return ErrInvalidAcademicYear
 	}
@@ -103,7 +107,7 @@ func ValidateClassroom(classroom Classroom) error {
 		return err
 	}
 
-	if err := ValidateClassroomLetter(&classroom.Letter); err != nil {
+	if err := ValidateClassroomLetter(classroom.Letter); err != nil {
 		return err
 	}
 
@@ -111,7 +115,7 @@ func ValidateClassroom(classroom Classroom) error {
 		return err
 	}
 
-	if err := ValidateAcademicYear(&classroom.AcademicYear); err != nil {
+	if err := ValidateAcademicYear(classroom.AcademicYear); err != nil {
 		return err
 	}
 
@@ -123,7 +127,7 @@ func ValidateClassroomRequest(req ClassroomRequest) error {
 		return err
 	}
 
-	if err := ValidateClassroomLetter(&req.Letter); err != nil {
+	if err := ValidateClassroomLetter(req.Letter); err != nil {
 		return err
 	}
 
@@ -131,7 +135,7 @@ func ValidateClassroomRequest(req ClassroomRequest) error {
 		return err
 	}
 
-	if err := ValidateAcademicYear(&req.AcademicYear); err != nil {
+	if err := ValidateAcademicYear(req.AcademicYear); err != nil {
 		return err
 	}
 

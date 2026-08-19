@@ -11,10 +11,10 @@ type Journal struct {
 	TeacherID    int32     `json:"teacher_id"`
 	Date         time.Time `json:"date"`
 	LessonNumber int32     `json:"lesson_number"`
-	Attendance   bool      `json:"attendance,omitempty"`
+	Attendance   *bool     `json:"attendance,omitempty"`
 	StudentID    int32     `json:"student_id"`
-	Grade        int32     `json:"grade,omitempty"`
-	Homework     string    `json:"homework,omitempty"`
+	Grade        *int32    `json:"grade,omitempty"`
+	Homework     *string   `json:"homework,omitempty"`
 }
 
 var (
@@ -87,7 +87,7 @@ func ValidateJournal(journal Journal) error {
 		return err
 	}
 
-	if err := ValidateTeacherID(journal.TeacherID); err != nil {
+	if err := ValidateTeacherID(&journal.TeacherID); err != nil {
 		return err
 	}
 
@@ -103,11 +103,11 @@ func ValidateJournal(journal Journal) error {
 		return err
 	}
 
-	if err := ValidateGrade(&journal.Grade); err != nil {
+	if err := ValidateGrade(journal.Grade); err != nil {
 		return err
 	}
 
-	if err := ValidateHomework(&journal.Homework); err != nil {
+	if err := ValidateHomework(journal.Homework); err != nil {
 		return err
 	}
 

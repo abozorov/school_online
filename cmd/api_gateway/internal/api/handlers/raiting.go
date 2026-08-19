@@ -62,6 +62,17 @@ func validateDateRange(value string) error {
 	return nil
 }
 
+// GetJournalByStudentId godoc
+// @Summary Get journal by student ID
+// @Tags Raiting
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Student ID"
+// @Param date_range query string true "Date range in format DD.MM.YYYY-DD.MM.YYYY"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/journal/student/{id} [get]
 func (h *Handler) GetJournalByStudentId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -105,6 +116,17 @@ func (h *Handler) GetJournalByStudentId(c *gin.Context) {
 	c.JSON(http.StatusOK, journal)
 }
 
+// GetJournalByClassroomId godoc
+// @Summary Get journal by classroom ID
+// @Tags Raiting
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Classroom ID"
+// @Param date_range query string true "Date range in format DD.MM.YYYY-DD.MM.YYYY"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/journal/classroom/{id} [get]
 func (h *Handler) GetJournalByClassroomId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -148,6 +170,17 @@ func (h *Handler) GetJournalByClassroomId(c *gin.Context) {
 	c.JSON(http.StatusOK, journal)
 }
 
+// UpdateJournal godoc
+// @Summary Update journal entry
+// @Tags Raiting
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body models.Journal true "Journal update payload"
+// @Success 200 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/journal [patch]
 func (h *Handler) UpdateJournal(c *gin.Context) {
 	var req models.Journal
 

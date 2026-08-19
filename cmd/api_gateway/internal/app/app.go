@@ -1,3 +1,12 @@
+// @title School Online API
+// @version 1.0
+// @description API Gateway for School Online service.
+// @host localhost:8080
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in                         header
+// @name                       Authorization
+// @description                Type "Bearer " followed by a space and
 package app
 
 import (

@@ -3,6 +3,7 @@ package userservice
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/models"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/services"
@@ -85,17 +86,17 @@ func (u *UserService) GetByID(ctx context.Context, id int) (*models.User, error)
 		PhoneNumber: user.GetPhoneNumber(),
 		Role:        user.GetRole(),
 		Birthday:    user.GetBirthday(),
-		StudentRole: &models.StudentRole{
+		StudentRole: models.StudentRole{
 			ClassroomID: user.GetStudent().GetClassId(),
 		},
-		ParentRole: &models.ParentRole{
+		ParentRole: models.ParentRole{
 			StudentsID: user.GetParent().GetStudentsId(),
 		},
-		StaffRole: &models.StaffRole{
+		StaffRole: models.StaffRole{
 			Position:   user.GetStuff().GetPosition(),
 			Experience: user.GetStuff().GetExperience(),
 		},
-		TeacherRole: &models.TeacherRole{
+		TeacherRole: models.TeacherRole{
 			SubjectsID: user.GetTeacher().GetSubjectsId(),
 			Experience: user.GetTeacher().GetExperience(),
 		},
@@ -119,17 +120,17 @@ func (u *UserService) List(ctx context.Context) ([]*models.User, error) {
 			PhoneNumber: user.GetPhoneNumber(),
 			Role:        user.GetRole(),
 			Birthday:    user.GetBirthday(),
-			StudentRole: &models.StudentRole{
+			StudentRole: models.StudentRole{
 				ClassroomID: user.GetStudent().GetClassId(),
 			},
-			ParentRole: &models.ParentRole{
+			ParentRole: models.ParentRole{
 				StudentsID: user.GetParent().GetStudentsId(),
 			},
-			StaffRole: &models.StaffRole{
+			StaffRole: models.StaffRole{
 				Position:   user.GetStuff().GetPosition(),
 				Experience: user.GetStuff().GetExperience(),
 			},
-			TeacherRole: &models.TeacherRole{
+			TeacherRole: models.TeacherRole{
 				SubjectsID: user.GetTeacher().GetSubjectsId(),
 				Experience: user.GetTeacher().GetExperience(),
 			},
@@ -157,9 +158,12 @@ func (u *UserService) Create(ctx context.Context, request models.RegisterUserReq
 		Username:    request.Username,
 		Email:       request.Email,
 		Password:    hashedPassword,
-		PhoneNumber: &request.PhoneNumber,
-		Birthday:    &request.Birthday,
+		Role:        request.Role,
+		PhoneNumber: request.PhoneNumber,
+		Birthday:    request.Birthday,
 	}
+
+	log.Println(request)
 
 	switch request.Role {
 	case "student":
@@ -201,14 +205,14 @@ func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserR
 	// update user
 	updatedUser := &userv1.UpdateUserRequest{
 		Id:          request.ID,
-		Name:        &request.Name,
-		Username:    &request.Username,
-		PhoneNumber: &request.PhoneNumber,
-		Role:        &request.Role,
-		Birthday:    &request.Birthday,
+		Name:        request.Name,
+		Username:    request.Username,
+		PhoneNumber: request.PhoneNumber,
+		Role:        request.Role,
+		Birthday:    request.Birthday,
 	}
 
-	switch request.Role {
+	switch *request.Role {
 	case "student":
 		updatedUser.Student = &userv1.Student{
 			ClassId: request.StudentRole.ClassroomID,

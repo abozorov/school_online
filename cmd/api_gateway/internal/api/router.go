@@ -1,11 +1,14 @@
 package api
 
 import (
+	_ "github.com/abozorov/school_online/docs"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/api/handlers"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/api/middleware"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/config"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/models/permission"
 	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
 )
 
 type Option struct {
@@ -17,6 +20,8 @@ type Option struct {
 func NewRouter(opt *Option) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Recovery(), opt.Middleware.Logging())
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})

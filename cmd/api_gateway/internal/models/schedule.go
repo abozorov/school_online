@@ -9,7 +9,7 @@ type Schedule struct {
 	TeacherID    int32  `json:"teacher_id"`
 	DayOfWeek    int32  `json:"day_of_week"`
 	LessonNumber int32  `json:"lesson_number"`
-	Room         int32  `json:"room,omitempty"`
+	Room         *int32  `json:"room,omitempty"`
 	AcademicYear string `json:"academic_year"`
 }
 
@@ -19,7 +19,7 @@ type ScheduleRequest struct {
 	TeacherID    int32  `json:"teacher_id"`
 	DayOfWeek    int32  `json:"day_of_week"`
 	LessonNumber int32  `json:"lesson_number"`
-	Room         int32  `json:"room,omitempty"`
+	Room         *int32  `json:"room,omitempty"`
 	AcademicYear string `json:"academic_year"`
 }
 
@@ -63,8 +63,11 @@ func ValidateLessonNumber(number int32) error {
 	return nil
 }
 
-func ValidateRoom(room int32) error {
-	if room <= 0 {
+func ValidateRoom(room *int32) error {
+	if room == nil {
+		return nil
+	}
+	if *room <= 0 {
 		return ErrInvalidRoom
 	}
 
@@ -84,7 +87,7 @@ func ValidateSchedule(schedule Schedule) error {
 		return err
 	}
 
-	if err := ValidateTeacherID(schedule.TeacherID); err != nil {
+	if err := ValidateTeacherID(&schedule.TeacherID); err != nil {
 		return err
 	}
 
@@ -100,7 +103,7 @@ func ValidateSchedule(schedule Schedule) error {
 		return err
 	}
 
-	if err := ValidateAcademicYear(&schedule.AcademicYear); err != nil {
+	if err := ValidateAcademicYear(schedule.AcademicYear); err != nil {
 		return err
 	}
 
@@ -116,7 +119,7 @@ func ValidateScheduleRequest(req ScheduleRequest) error {
 		return err
 	}
 
-	if err := ValidateTeacherID(req.TeacherID); err != nil {
+	if err := ValidateTeacherID(&req.TeacherID); err != nil {
 		return err
 	}
 
@@ -132,7 +135,7 @@ func ValidateScheduleRequest(req ScheduleRequest) error {
 		return err
 	}
 
-	if err := ValidateAcademicYear(&req.AcademicYear); err != nil {
+	if err := ValidateAcademicYear(req.AcademicYear); err != nil {
 		return err
 	}
 

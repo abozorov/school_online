@@ -21,20 +21,20 @@ type User struct {
 	Role         string `json:"role,omitempty"`
 	Birthday     string `json:"birthday,omitempty"`
 
-	StudentRole *StudentRole `json:"student_role,omitempty"`
-	ParentRole  *ParentRole  `json:"parent_role,omitempty"`
-	StaffRole   *StaffRole   `json:"staff_role,omitempty"`
-	TeacherRole *TeacherRole `json:"teacher_role,omitempty"`
+	StudentRole StudentRole `json:"student_role,omitempty"`
+	ParentRole  ParentRole  `json:"parent_role,omitempty"`
+	StaffRole   StaffRole   `json:"staff_role,omitempty"`
+	TeacherRole TeacherRole `json:"teacher_role,omitempty"`
 }
 
 type RegisterUserRequest struct {
-	Name        string `json:"name"`
-	Username    string `json:"username"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phone_number,omitempty"`
-	Role        string `json:"role,omitempty"`
-	Password    string `json:"password"`
-	Birthday    string `json:"birthday,omitempty"`
+	Name        string  `json:"name"`
+	Username    string  `json:"username"`
+	Email       string  `json:"email"`
+	PhoneNumber *string `json:"phone_number,omitempty"`
+	Role        string  `json:"role"`
+	Password    string  `json:"password"`
+	Birthday    *string `json:"birthday,omitempty"`
 
 	StudentRole *StudentRole `json:"student_role,omitempty"`
 	ParentRole  *ParentRole  `json:"parent_role,omitempty"`
@@ -43,13 +43,13 @@ type RegisterUserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	ID          int32  `json:"id"`
-	Name        string `json:"name,omitempty"`
-	Username    string `json:"username,omitempty"`
-	Email       string `json:"email,omitempty"`
-	PhoneNumber string `json:"phone_number,omitempty"`
-	Role        string `json:"role,omitempty"`
-	Birthday    string `json:"birthday,omitempty"`
+	ID          int32   `json:"id"`
+	Name        *string `json:"name,omitempty"`
+	Username    *string `json:"username,omitempty"`
+	Email       *string `json:"email,omitempty"`
+	PhoneNumber *string `json:"phone_number,omitempty"`
+	Role        *string `json:"role,omitempty"`
+	Birthday    *string `json:"birthday,omitempty"`
 
 	StudentRole *StudentRole `json:"student_role,omitempty"`
 	ParentRole  *ParentRole  `json:"parent_role,omitempty"`
@@ -58,7 +58,7 @@ type UpdateUserRequest struct {
 }
 
 type StudentRole struct {
-	ClassroomID int32 `json:"classroom_id,omitempty"`
+	ClassroomID int32 `json:"classroom_id"`
 }
 
 type ParentRole struct {
@@ -66,7 +66,7 @@ type ParentRole struct {
 }
 
 type StaffRole struct {
-	Position   string `json:"position,omitempty"`
+	Position   string `json:"position"`
 	Experience int32  `json:"experience"`
 }
 
@@ -95,6 +95,9 @@ func ValidateID(id int32) error {
 }
 
 func ValidateName(name *string) error {
+	if name == nil {
+		return nil
+	}
 	*name = strings.TrimSpace(*name)
 
 	if *name == "" {
@@ -111,6 +114,9 @@ func ValidateName(name *string) error {
 }
 
 func ValidateUsername(username *string) error {
+	if username == nil {
+		return nil
+	}
 	*username = strings.TrimSpace(*username)
 
 	if len(*username) < 3 || len(*username) > 100 {
@@ -130,6 +136,9 @@ func ValidateUsername(username *string) error {
 }
 
 func ValidateEmail(email *string) error {
+	if email == nil {
+		return nil
+	}
 	*email = strings.TrimSpace(*email)
 
 	if *email == "" {
@@ -193,8 +202,11 @@ func ValidatePassword(password string) error {
 }
 
 func ValidateBirthday(birthday *string) error {
+	if birthday == nil {
+		return nil
+	}
 
-	birthDate, err := time.Parse("02-01-2006", *birthday)
+	birthDate, err := time.Parse("02.01.2006", *birthday)
 	if err != nil {
 		return ErrInvalidBirthday
 	}
@@ -240,7 +252,7 @@ func ValidateRegisterRequest(req RegisterUserRequest) error {
 		return err
 	}
 
-	if err := ValidatePhoneNumber(&req.PhoneNumber); err != nil {
+	if err := ValidatePhoneNumber(req.PhoneNumber); err != nil {
 		return err
 	}
 
@@ -248,34 +260,40 @@ func ValidateRegisterRequest(req RegisterUserRequest) error {
 		return err
 	}
 
-	if err := ValidateBirthday(&req.Birthday); err != nil {
+	if err := ValidateBirthday(req.Birthday); err != nil {
 		return err
 	}
 
+	if err := ValidateRole(&req.Role); err != nil {
+		return err
+	}
 	return nil
 }
 
 func ValidateUpdateUserRequest(req UpdateUserRequest) error {
 
-	if err := ValidateName(&req.Name); err != nil {
+	if err := ValidateName(req.Name); err != nil {
 		return err
 	}
 
-	if err := ValidateUsername(&req.Username); err != nil {
+	if err := ValidateUsername(req.Username); err != nil {
 		return err
 	}
 
-	if err := ValidateEmail(&req.Email); err != nil {
+	if err := ValidateEmail(req.Email); err != nil {
 		return err
 	}
 
-	if err := ValidatePhoneNumber(&req.PhoneNumber); err != nil {
+	if err := ValidatePhoneNumber(req.PhoneNumber); err != nil {
 		return err
 	}
 
-	if err := ValidateBirthday(&req.Birthday); err != nil {
+	if err := ValidateBirthday(req.Birthday); err != nil {
 		return err
 	}
 
+	if err := ValidateRole(req.Role); err != nil {
+		return err
+	}
 	return nil
 }

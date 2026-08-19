@@ -9,6 +9,17 @@ import (
 	"go.uber.org/zap"
 )
 
+// CreateSubject godoc
+// @Summary Create subject
+// @Tags User
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body models.CreateSubjectRequest true "Subject data"
+// @Success 201 {object} map[string]int32
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /api/user/subject [post]
 func (h *Handler) CreateSubject(c *gin.Context) {
 	var req models.CreateSubjectRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

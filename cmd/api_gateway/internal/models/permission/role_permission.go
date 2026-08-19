@@ -1,13 +1,49 @@
 package permission
 
 var RolePermission = map[string]map[string]struct{}{
-	Staff: {},
+	Staff: {
+		UserView:              {},
+		UserList:              {},
+		UserCreate:            {},
+		UserUpdate:            {},
+		UserDelete:            {},
+		SubjectCreate:         {},
+		ClassroomView:         {},
+		ClassroomList:         {},
+		ClassroomCreate:       {},
+		ClassroomUpdate:       {},
+		ClassroomDelete:       {},
+		ScheduleClassroomView: {},
+		ScheduleTeacherView:   {},
+		ScheduleCreate:        {},
+		ScheduleUpdate:        {},
+		ScheduleDelete:        {},
+		JournalStudentView:    {},
+		JournalClassroomView:  {},
+	},
 
-	Student: {},
+	Student: {
+		UserViewMe:            {},
+		ScheduleClassroomView: {},
+		JournalStudentViewMe:  {},
+	},
 
-	Parent: {},
+	Parent: {
+		UserViewMe:            {},
+		ScheduleClassroomView: {},
+		JournalStudentViewMe:  {},
+	},
 
-	Teacher: {},
+	Teacher: {
+		UserViewMe:              {},
+		ClassroomView:           {},
+		ClassroomList:           {},
+		ScheduleClassroomView:   {},
+		ScheduleTeacherView:     {},
+		JournalGradeUpdate:      {},
+		JournalHomeworkUpdate:   {},
+		JournalAttendanceUpdate: {},
+	},
 
 	User: {},
 }

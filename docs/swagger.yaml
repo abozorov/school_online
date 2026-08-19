@@ -1,0 +1,920 @@
+basePath: /
+definitions:
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.Classroom:
+    properties:
+      academic_year:
+        type: string
+      grade_number:
+        type: integer
+      hometown_teacher_id:
+        type: integer
+      id:
+        type: integer
+      letter:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.ClassroomRequest:
+    properties:
+      academic_year:
+        type: string
+      grade_number:
+        type: integer
+      hometown_teacher_id:
+        type: integer
+      letter:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.CreateSubjectRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.Journal:
+    properties:
+      attendance:
+        type: boolean
+      classroom_id:
+        type: integer
+      date:
+        type: string
+      grade:
+        type: integer
+      homework:
+        type: string
+      lesson_number:
+        type: integer
+      student_id:
+        type: integer
+      subject_id:
+        type: integer
+      teacher_id:
+        type: integer
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.ParentRole:
+    properties:
+      students_id:
+        items:
+          type: integer
+        type: array
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.RegisterUserRequest:
+    properties:
+      birthday:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      parent_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.ParentRole'
+      password:
+        type: string
+      phone_number:
+        type: string
+      role:
+        type: string
+      staff_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.StaffRole'
+      student_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.StudentRole'
+      teacher_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.TeacherRole'
+      username:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.Schedule:
+    properties:
+      academic_year:
+        type: string
+      classroom_id:
+        type: integer
+      day_of_week:
+        type: integer
+      id:
+        type: integer
+      lesson_number:
+        type: integer
+      room:
+        type: integer
+      subject_id:
+        type: integer
+      teacher_id:
+        type: integer
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.ScheduleRequest:
+    properties:
+      academic_year:
+        type: string
+      classroom_id:
+        type: integer
+      day_of_week:
+        type: integer
+      lesson_number:
+        type: integer
+      room:
+        type: integer
+      subject_id:
+        type: integer
+      teacher_id:
+        type: integer
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.StaffRole:
+    properties:
+      experience:
+        type: integer
+      position:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.StudentRole:
+    properties:
+      classroom_id:
+        type: integer
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.TeacherRole:
+    properties:
+      experience:
+        type: integer
+      subjects_id:
+        items:
+          type: integer
+        type: array
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.Tokens:
+    properties:
+      jwt_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.UpdateUserRequest:
+    properties:
+      birthday:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      parent_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.ParentRole'
+      phone_number:
+        type: string
+      role:
+        type: string
+      staff_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.StaffRole'
+      student_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.StudentRole'
+      teacher_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.TeacherRole'
+      username:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.User:
+    properties:
+      birthday:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      parent_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.ParentRole'
+      phone_number:
+        type: string
+      role:
+        type: string
+      staff_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.StaffRole'
+      student_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.StudentRole'
+      teacher_role:
+        $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.TeacherRole'
+      username:
+        type: string
+      verify_email:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Gateway for School Online service.
+  title: School Online API
+  version: "1.0"
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT and refresh tokens.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Tokens'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /api/classroom:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Updated classroom data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Classroom'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update classroom
+      tags:
+      - Classroom
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Classroom data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.ClassroomRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              format: int32
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create classroom
+      tags:
+      - Classroom
+  /api/classroom/{id}:
+    delete:
+      parameters:
+      - description: Classroom ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete classroom by ID
+      tags:
+      - Classroom
+    get:
+      parameters:
+      - description: Classroom ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Classroom'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get classroom by ID
+      tags:
+      - Classroom
+  /api/classroom/list:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Classroom'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List classrooms
+      tags:
+      - Classroom
+  /api/journal:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Journal update payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Journal'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update journal entry
+      tags:
+      - Raiting
+  /api/journal/classroom/{id}:
+    get:
+      parameters:
+      - description: Classroom ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Date range in format DD.MM.YYYY-DD.MM.YYYY
+        in: query
+        name: date_range
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get journal by classroom ID
+      tags:
+      - Raiting
+  /api/journal/student/{id}:
+    get:
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Date range in format DD.MM.YYYY-DD.MM.YYYY
+        in: query
+        name: date_range
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get journal by student ID
+      tags:
+      - Raiting
+  /api/schedule:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Updated schedule data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Schedule'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update schedule
+      tags:
+      - Schedule
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Schedule data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.ScheduleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              format: int32
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create schedule
+      tags:
+      - Schedule
+  /api/schedule/{id}:
+    delete:
+      parameters:
+      - description: Schedule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete schedule by ID
+      tags:
+      - Schedule
+  /api/schedule/classroom/{id}:
+    get:
+      parameters:
+      - description: Classroom ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Schedule'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get schedule by classroom ID
+      tags:
+      - Schedule
+  /api/schedule/teacher/{id}:
+    get:
+      parameters:
+      - description: Teacher ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Schedule'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get schedule by teacher ID
+      tags:
+      - Schedule
+  /api/user:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Updated user data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update user
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              format: int32
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create user
+      tags:
+      - User
+  /api/user/{id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete user by ID
+      tags:
+      - User
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - User
+  /api/user/list:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.User'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List users
+      tags:
+      - User
+  /api/user/subject:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Subject data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.CreateSubjectRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              format: int32
+              type: integer
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create subject
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer " followed by a space and
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

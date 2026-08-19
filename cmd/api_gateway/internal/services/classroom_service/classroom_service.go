@@ -41,7 +41,7 @@ func (c *ClassroomService) GetClassroomByID(ctx context.Context, id int32) (*mod
 		ID:                classroom.GetId(),
 		GradeNumber:       classroom.GetGradeNumber(),
 		Letter:            classroom.GetLetter(),
-		HometownTeacherID: classroom.GetHometownTeacherId(),
+		HometownTeacherID: &classroom.HometownTeacherId,
 		AcademicYear:      classroom.GetAcademicYear(),
 	}, nil
 }
@@ -60,7 +60,7 @@ func (c *ClassroomService) List(ctx context.Context) ([]*models.Classroom, error
 			ID:                classroom.GetId(),
 			GradeNumber:       classroom.GetGradeNumber(),
 			Letter:            classroom.GetLetter(),
-			HometownTeacherID: classroom.GetHometownTeacherId(),
+			HometownTeacherID: &classroom.HometownTeacherId,
 			AcademicYear:      classroom.GetAcademicYear(),
 		})
 	}
@@ -79,7 +79,7 @@ func (c *ClassroomService) Create(ctx context.Context, request models.ClassroomR
 	out, err := c.serviceManager.ClassroomService().CreateClassroom(ctx, &classroomv1.CreateClassroomRequest{
 		GradeNumber:       request.GradeNumber,
 		Letter:            request.Letter,
-		HometownTeacherId: request.HometownTeacherID,
+		HometownTeacherId: *request.HometownTeacherID,
 		AcademicYear:      request.AcademicYear,
 	})
 	if err != nil {
@@ -101,7 +101,7 @@ func (c *ClassroomService) UpdateByID(ctx context.Context, request models.Classr
 		Id:                request.ID,
 		GradeNumber:       &request.GradeNumber,
 		Letter:            &request.Letter,
-		HometownTeacherId: &request.HometownTeacherID,
+		HometownTeacherId: request.HometownTeacherID,
 		AcademicYear:      &request.AcademicYear,
 	})
 	if err != nil {

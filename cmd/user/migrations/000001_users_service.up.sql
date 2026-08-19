@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS "users" (
   "password_hash" TEXT NOT NULL,
   "refresh_token" TEXT,
   "role" VARCHAR(100) CHECK ("role" IN ('user', 'staff', 'teacher', 'student', 'parent')),
-  "birthday" TIMESTAMP,
+  "birthday" VARCHAR(10),
   PRIMARY KEY ("id")
 );
 
