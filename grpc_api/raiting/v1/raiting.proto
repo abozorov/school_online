@@ -12,12 +12,14 @@ service RaitingService {
 
 message UpdateJournalRequest {
         int32 class_id = 1;
-        optional int32 subject_id = 2;
-        optional int32 teacher_id = 3;
-        optional int32 lesson_number = 4;
-        optional bool attendence = 5;
-        optional int32 grade = 6;
-        optional string homework = 7;
+        int32 subject_id = 2;
+        int32 teacher_id = 3;
+        string date = 4;
+        int32 lesson_number = 5;
+        int32 student_id = 6;
+        optional bool attendance = 7;
+        optional int32 grade = 8;
+        optional string homework = 9;
 }
 
 message UpdateJournalResponse {

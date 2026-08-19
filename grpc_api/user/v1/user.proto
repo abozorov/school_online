@@ -66,13 +66,13 @@ message CreateUserRequest {
         string username = 2;
         string email = 3;
         string password = 4;
-        string phone_number = 5;
+        optional string phone_number = 5;
         string role = 6;
-        string birthday = 7;
-        Student student = 8;
-        Parent parent = 9;
-        Stuff stuff = 10;
-        Teacher teacher = 11;
+        optional string birthday = 7;
+        optional Student student = 8;
+        optional Parent parent = 9;
+        optional Stuff stuff = 10;
+        optional Teacher teacher = 11;
 }
 
 message CreateUserResponse {

@@ -157,8 +157,8 @@ func (u *UserService) Create(ctx context.Context, request models.RegisterUserReq
 		Username:    request.Username,
 		Email:       request.Email,
 		Password:    hashedPassword,
-		PhoneNumber: request.PhoneNumber,
-		Birthday:    request.Birthday,
+		PhoneNumber: &request.PhoneNumber,
+		Birthday:    &request.Birthday,
 	}
 
 	switch request.Role {
@@ -184,7 +184,7 @@ func (u *UserService) Create(ctx context.Context, request models.RegisterUserReq
 		return 0, fmt.Errorf("user_service.Create: %w", errs.ErrBadRequestBody)
 	}
 	out, err := u.serviceManager.UserService().Create(ctx, &user)
-	
+
 	if err != nil {
 		return 0, fmt.Errorf("user_service.Create: %w", err)
 	}
@@ -227,8 +227,6 @@ func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserR
 			SubjectsId: request.TeacherRole.SubjectsID,
 			Experience: request.TeacherRole.Experience,
 		}
-	default:
-		return fmt.Errorf("user_service.UpdateByID: %w", errs.ErrBadRequestBody)
 	}
 
 	_, err = u.serviceManager.UserService().Update(ctx, updatedUser)

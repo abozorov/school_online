@@ -150,21 +150,9 @@ func NewRouter(opt *Option) *gin.Engine {
 	)
 
 	journalApi.PATCH(
-		"/grade/:id",
+		"",
 		opt.Middleware.RBAC(permission.JournalGradeUpdate),
-		opt.Handler.UpdateJournalGradeById,
-	)
-
-	journalApi.PATCH(
-		"/attendance/:id",
-		opt.Middleware.RBAC(permission.JournalAttendanceUpdate),
-		opt.Handler.UpdateJournalAttendanceById,
-	)
-
-	journalApi.PATCH(
-		"/homework/:id",
-		opt.Middleware.RBAC(permission.JournalHomeworkUpdate),
-		opt.Handler.UpdateJournalHomeworkById,
+		opt.Handler.UpdateJournal,
 	)
 	return router
 }
