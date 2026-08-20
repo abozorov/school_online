@@ -8,14 +8,10 @@ import (
 
 type (
 	Config struct {
-		HTTP             http
-		UserService      userService
-		ClassroomService classroomService
-		RaitingService   raitingService
-		PG               pg
-		Redis            redis
-		JWT              jwt
-		Email            email
+		HTTP  http
+		PG    pg
+		JWT   jwt
+		Email email
 	}
 
 	http struct {
@@ -23,21 +19,6 @@ type (
 		Port            string `env:"SERVER_PORT"`
 		Storage         string `env:"STORAGE"`
 		AuditLogStorage string `env:"AUDIT_LOG_STORAGE"`
-	}
-
-	userService struct {
-		Port string `env:"USER_SERVICE_PORT"`
-		Host string `env:"USER_SERVICE_HOST"`
-	}
-
-	classroomService struct {
-		Port string `env:"CLASSROOM_SERVICE_PORT"`
-		Host string `env:"CLASSROOM_SERVICE_HOST"`
-	}
-
-	raitingService struct {
-		Port string `env:"RAITING_SERVICE_PORT"`
-		Host string `env:"RAITING_SERVICE_HOST"`
 	}
 
 	pg struct {
@@ -49,14 +30,8 @@ type (
 		Name     string `env:"PG_NAME"`
 	}
 
-	redis struct {
-		Host string `env:"REDIS_HOST"`
-		Port string `env:"REDIS_PORT"`
-	}
-
 	jwt struct {
 		SecretToken string `env:"JWT_SECRET"`
-		JWTLiveTime int    `env:"JWT_LIVE_TIME"`
 	}
 
 	email struct {

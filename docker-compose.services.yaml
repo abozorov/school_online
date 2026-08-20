@@ -1,0 +1,36 @@
+services:
+  user:
+    build:
+      context: .
+      dockerfile: cmd/user/Dockerfile
+    ports:
+      - "5050:5050"
+    restart: unless-stopped
+
+  classroom:
+    build:
+      context: .
+      dockerfile: cmd/classroom/Dockerfile
+    ports:
+      - "5051:5051"
+    restart: unless-stopped
+
+  raiting:
+    build:
+      context: .
+      dockerfile: cmd/raiting/Dockerfile
+    ports:
+      - "5052:5052"
+    restart: unless-stopped
+
+  api_gateway:
+    build:
+      context: .
+      dockerfile: cmd/api_gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user
+      - classroom
+      - raiting
+    restart: unless-stopped

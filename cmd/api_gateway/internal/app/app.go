@@ -49,7 +49,7 @@ func Run(conf *config.Config) {
 	)
 
 	// create memCache
-	memCache, err := cache.New(context.Background(), ":6379")
+	memCache, err := cache.New(context.Background(), fmt.Sprintf("%s:%s", conf.Redis.Host, conf.Redis.Port))
 	// memCache, err := cache.New(context.Background(), "redis:6379")
 	if err != nil {
 		logger.Error(err.Error())
