@@ -40,7 +40,7 @@ func NewUserService(
 func (u *UserService) Login(ctx context.Context, request models.LoginRequest) (*models.Tokens, error) {
 	err := request.Validate()
 	if err != nil {
-		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w: %w", errs.ErrBadRequestBody, err)
+		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// get user by email
@@ -48,19 +48,19 @@ func (u *UserService) Login(ctx context.Context, request models.LoginRequest) (*
 		Email: request.Email,
 	})
 	if err != nil {
-		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", err)
+		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", services.GRPCToErrs(err))
 	}
 
 	// compare password
 	err = password.Compare(user.GetPassword(), request.Password)
 	if err != nil {
-		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", err)
+		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", services.GRPCToErrs(err))
 	}
 
 	// generate tokens
 	jwtToken, err := u.jwt.GenerateToken(int(user.GetId()), user.GetEmail(), user.GetRole())
 	if err != nil {
-		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", err)
+		return &models.Tokens{}, fmt.Errorf("user_service.Login: %w", services.GRPCToErrs(err))
 	}
 
 	// return tokens
@@ -74,7 +74,7 @@ func (u *UserService) GetByID(ctx context.Context, id int) (*models.User, error)
 		Id: int32(id),
 	})
 	if err != nil {
-		return &models.User{}, fmt.Errorf("user_service.GetByID: %w", err)
+		return &models.User{}, fmt.Errorf("user_service.GetByID: %w", services.GRPCToErrs(err))
 	}
 
 	return &models.User{
@@ -104,9 +104,9 @@ func (u *UserService) GetByID(ctx context.Context, id int) (*models.User, error)
 }
 
 func (u *UserService) List(ctx context.Context) ([]*models.User, error) {
-	users, err := u.serviceManager.UserService().GetAll(ctx, &userv1.GetAllUsersRequest{})
+	users, err := u.serviceManager.UserService().GetAll(ctx, &userv1.GetAllRequest{})
 	if err != nil {
-		return nil, fmt.Errorf("user_service.List: %w", err)
+		return nil, fmt.Errorf("user_service.List: %w", services.GRPCToErrs(err))
 	}
 
 	var result []*models.User
@@ -143,13 +143,13 @@ func (u *UserService) List(ctx context.Context) ([]*models.User, error) {
 func (u *UserService) Create(ctx context.Context, request models.RegisterUserRequest) (int32, error) {
 	err := models.ValidateRegisterRequest(request)
 	if err != nil {
-		return 0, fmt.Errorf("user_service.Create: %w: %w", errs.ErrBadRequestBody, err)
+		return 0, fmt.Errorf("user_service.Create: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// hash password
 	hashedPassword, err := password.Hash(request.Password)
 	if err != nil {
-		return 0, fmt.Errorf("user_service.Create: %w", err)
+		return 0, fmt.Errorf("user_service.Create: %w", services.GRPCToErrs(err))
 	}
 
 	// create user
@@ -190,7 +190,7 @@ func (u *UserService) Create(ctx context.Context, request models.RegisterUserReq
 	out, err := u.serviceManager.UserService().Create(ctx, &user)
 
 	if err != nil {
-		return 0, fmt.Errorf("user_service.Create: %w", err)
+		return 0, fmt.Errorf("user_service.Create: %w", services.GRPCToErrs(err))
 	}
 
 	return out.GetId(), nil
@@ -199,7 +199,7 @@ func (u *UserService) Create(ctx context.Context, request models.RegisterUserReq
 func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserRequest) error {
 	err := models.ValidateID(request.ID)
 	if err != nil {
-		return fmt.Errorf("user_service.UpdateByID: %w: %w", errs.ErrBadRequestBody, err)
+		return fmt.Errorf("user_service.UpdateByID: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// update user
@@ -236,7 +236,7 @@ func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserR
 	_, err = u.serviceManager.UserService().Update(ctx, updatedUser)
 
 	if err != nil {
-		return fmt.Errorf("user_service.UpdateByID: %w", err)
+		return fmt.Errorf("user_service.UpdateByID: %w", services.GRPCToErrs(err))
 	}
 
 	return nil
@@ -245,14 +245,14 @@ func (u *UserService) UpdateByID(ctx context.Context, request models.UpdateUserR
 func (u *UserService) DeleteByID(ctx context.Context, id int) error {
 	err := models.ValidateID(int32(id))
 	if err != nil {
-		return fmt.Errorf("user_service.DeleteByID: %w: %w", errs.ErrBadRequestBody, err)
+		return fmt.Errorf("user_service.DeleteByID: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	_, err = u.serviceManager.UserService().Delete(ctx, &userv1.DeleteUserRequest{
 		Id: int32(id),
 	})
 	if err != nil {
-		return fmt.Errorf("user_service.DeleteByID: %w", err)
+		return fmt.Errorf("user_service.DeleteByID: %w", services.GRPCToErrs(err))
 	}
 
 	return nil

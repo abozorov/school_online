@@ -141,6 +141,17 @@ definitions:
       classroom_id:
         type: integer
     type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.Subject:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - name
+    type: object
   github_com_abozorov_school_online_cmd_api_gateway_internal_models.TeacherRole:
     properties:
       experience:
@@ -155,6 +166,15 @@ definitions:
       jwt_token:
         type: string
       refresh_token:
+        type: string
+    type: object
+  github_com_abozorov_school_online_cmd_api_gateway_internal_models.UpdateSubjectRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
         type: string
     type: object
   github_com_abozorov_school_online_cmd_api_gateway_internal_models.UpdateUserRequest:
@@ -455,18 +475,21 @@ paths:
       tags:
       - Raiting
   /api/journal/classroom/{id}:
-    get:
+    post:
       parameters:
       - description: Classroom ID
         in: path
         name: id
         required: true
         type: integer
-      - description: Date range in format DD.MM.YYYY-DD.MM.YYYY
-        in: query
-        name: date_range
+      - description: Date range(date_range) in format DD.MM.YYYY-DD.MM.YYYY
+        in: body
+        name: request
         required: true
-        type: string
+        schema:
+          additionalProperties:
+            type: string
+          type: object
       produces:
       - application/json
       responses:
@@ -493,7 +516,7 @@ paths:
       tags:
       - Raiting
   /api/journal/student/{id}:
-    get:
+    post:
       parameters:
       - description: Student ID
         in: path
@@ -501,10 +524,13 @@ paths:
         required: true
         type: integer
       - description: Date range in format DD.MM.YYYY-DD.MM.YYYY
-        in: query
-        name: date_range
+        in: body
+        name: request
         required: true
-        type: string
+        schema:
+          additionalProperties:
+            type: string
+          type: object
       produces:
       - application/json
       responses:
@@ -874,6 +900,42 @@ paths:
       tags:
       - User
   /api/user/subject:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Updated subject data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.UpdateSubjectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update subject
+      tags:
+      - User
     post:
       consumes:
       - application/json
@@ -909,6 +971,66 @@ paths:
       security:
       - BearerAuth: []
       summary: Create subject
+      tags:
+      - User
+  /api/user/subject/{id}:
+    get:
+      parameters:
+      - description: Subject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Subject'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get subject by ID
+      tags:
+      - User
+  /api/user/subject/list:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_abozorov_school_online_cmd_api_gateway_internal_models.Subject'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: List subjects
       tags:
       - User
 securityDefinitions:

@@ -64,7 +64,7 @@ func (h *Handler) ListClassrooms(ctx context.Context, req *classroomv1.ListClass
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "request is required")
 	}
-	list, err := h.service.ListClassrooms(ctx, req.GetPage(), req.GetLimit())
+	list, err := h.service.ListClassrooms(ctx)
 	if err != nil {
 		return nil, responseErr(err)
 	}

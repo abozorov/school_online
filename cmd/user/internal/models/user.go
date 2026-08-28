@@ -13,6 +13,8 @@ type UserService interface {
 	Update(ctx context.Context, user *User) error
 	Delete(ctx context.Context, id int32) error
 	CreateSubject(ctx context.Context, name string, description string) (int32, error)
+	GetSubjectById(ctx context.Context, id int32) (*Subject, error)
+	GetAllSubjects(ctx context.Context) ([]*Subject, error)
 	UpdateSubject(ctx context.Context, id int32, name string, description string) error
 }
 
@@ -24,6 +26,8 @@ type UserRepository interface {
 	Update(ctx context.Context, user *User) error
 	Delete(ctx context.Context, id int32) error
 	CreateSubject(ctx context.Context, name string, description string) (int32, error)
+	GetSubjectById(ctx context.Context, id int32) (*Subject, error)
+	GetAllSubjects(ctx context.Context) ([]*Subject, error)
 	UpdateSubject(ctx context.Context, id int32, name string, description string) error
 }
 
@@ -61,6 +65,12 @@ type StaffRole struct {
 type TeacherRole struct {
 	SubjectsID []int32
 	Experience int32
+}
+
+type Subject struct {
+	ID          int32
+	Name        string
+	Description string
 }
 
 var (

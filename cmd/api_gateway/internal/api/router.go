@@ -1,14 +1,14 @@
 package api
 
 import (
-	_ "github.com/abozorov/school_online/docs"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/api/handlers"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/api/middleware"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/config"
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/models/permission"
+	_ "github.com/abozorov/school_online/docs"
 	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Option struct {
@@ -19,9 +19,23 @@ type Option struct {
 
 func NewRouter(opt *Option) *gin.Engine {
 	router := gin.New()
-	router.Use(gin.Recovery(), opt.Middleware.Logging())
+	router.Use(gin.Recovery(), opt.Middleware.Logging(), opt.Middleware.CORS())
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Serve Frontend static assets directly from Go
+	router.Static("/css", "./frontend/css")
+	router.Static("/js", "./frontend/js")
+	router.StaticFile("/", "./frontend/index.html")
+
+	router.NoRoute(func(c *gin.Context) {
+		path := c.Request.URL.Path
+		if (len(path) >= 4 && path[:4] == "/api") || (len(path) >= 8 && path[:8] == "/swagger") {
+			c.JSON(404, gin.H{"error": "Endpoint not found"})
+			return
+		}
+		c.File("./frontend/index.html")
+	})
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
@@ -67,10 +81,28 @@ func NewRouter(opt *Option) *gin.Engine {
 		opt.Handler.DeleteById,
 	)
 
+	userApi.GET(
+		"/subject/:id",
+		opt.Middleware.RBAC(permission.SubjectCreate),
+		opt.Handler.GetSubjectById,
+	)
+
+	userApi.GET(
+		"/subject/list",
+		opt.Middleware.RBAC(permission.SubjectCreate),
+		opt.Handler.ListSubjects,
+	)
+
 	userApi.POST(
 		"/subject",
 		opt.Middleware.RBAC(permission.SubjectCreate),
 		opt.Handler.CreateSubject,
+	)
+
+	userApi.PATCH(
+		"/subject",
+		opt.Middleware.RBAC(permission.SubjectCreate),
+		opt.Handler.UpdateSubject,
 	)
 
 	// classroom
@@ -87,13 +119,13 @@ func NewRouter(opt *Option) *gin.Engine {
 		opt.Middleware.RBAC(permission.ClassroomList),
 		opt.Handler.ListClassrooms,
 	)
-	
+
 	classroomApi.POST(
 		"",
 		opt.Middleware.RBAC(permission.ClassroomCreate),
 		opt.Handler.CreateClassroom,
 	)
-	
+
 	classroomApi.PATCH(
 		"",
 		opt.Middleware.RBAC(permission.ClassroomUpdate),
@@ -120,13 +152,13 @@ func NewRouter(opt *Option) *gin.Engine {
 		opt.Middleware.RBAC(permission.ScheduleTeacherView),
 		opt.Handler.GetScheduleByTeacherId,
 	)
-	
+
 	scheduleApi.POST(
 		"",
 		opt.Middleware.RBAC(permission.ScheduleCreate),
 		opt.Handler.CreateSchedule,
 	)
-	
+
 	scheduleApi.PATCH(
 		"",
 		opt.Middleware.RBAC(permission.ScheduleUpdate),
@@ -142,13 +174,13 @@ func NewRouter(opt *Option) *gin.Engine {
 	// journal
 	journalApi := router.Group("/api/journal")
 	journalApi.Use(opt.Middleware.Auth())
-	journalApi.GET(
+	journalApi.POST(
 		"/student/:id",
 		opt.Middleware.RBAC(permission.JournalStudentViewMe),
 		opt.Handler.GetJournalByStudentId,
 	)
-	
-	journalApi.GET(
+
+	journalApi.POST(
 		"/classroom/:id",
 		opt.Middleware.RBAC(permission.JournalClassroomView),
 		opt.Handler.GetJournalByClassroomId,

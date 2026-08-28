@@ -9,6 +9,8 @@ const (
 	UserDelete = "user:Delete"
 
 	SubjectCreate = "subject:create"
+	SubjectUpdate = "subject:update"
+	SubjectList   = "subject:list"
 
 	ClassroomView   = "classroom:view"
 	ClassroomList   = "classroom:list"

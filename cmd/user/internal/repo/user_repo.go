@@ -213,6 +213,36 @@ func (r *Repo) CreateSubject(ctx context.Context, name string, description strin
 	return id, err
 }
 
+func (r *Repo) GetSubjectById(ctx context.Context, id int32) (*models.Subject, error) {
+	var subject models.Subject
+	row := r.pg.QueryRow(ctx, `SELECT id, name, description FROM subjects WHERE id = $1`, id)
+	if err := row.Scan(&subject.ID, &subject.Name, &subject.Description); err != nil {
+		return nil, err
+	}
+	return &subject, nil
+}
+
+func (r *Repo) GetAllSubjects(ctx context.Context) ([]*models.Subject, error) {
+	rows, err := r.pg.Query(ctx, `SELECT id, name, description FROM subjects ORDER BY id`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	result := make([]*models.Subject, 0)
+	for rows.Next() {
+		var subject models.Subject
+		if err := rows.Scan(&subject.ID, &subject.Name, &subject.Description); err != nil {
+			return nil, err
+		}
+		result = append(result, &subject)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func (r *Repo) UpdateSubject(ctx context.Context, id int32, name string, description string) error {
 	if name == "" && description == "" {
 		return nil

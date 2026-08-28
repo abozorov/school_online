@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/abozorov/school_online/cmd/api_gateway/internal/models"
+	"github.com/abozorov/school_online/cmd/api_gateway/internal/services"
 	classroomv1 "github.com/abozorov/school_online/grpc_api/generate/classroompb/classroom/v1"
 	"github.com/abozorov/school_online/pkg/errs"
 )
@@ -13,7 +14,7 @@ func (c *ClassroomService) GetScheduleByClassroomId(ctx context.Context, classro
 	// validate id
 	err := models.ValidateID(classroomId)
 	if err != nil {
-		return nil, fmt.Errorf("classroom_service.GetScheduleByClassroomId: %w: %w", errs.ErrBadRequest, err)
+		return nil, fmt.Errorf("classroom_service.GetScheduleByClassroomId: %w: %w", errs.ErrBadRequest, services.GRPCToErrs(err))
 	}
 
 	// get schedule by classroom id
@@ -21,7 +22,7 @@ func (c *ClassroomService) GetScheduleByClassroomId(ctx context.Context, classro
 		ClassId: classroomId,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("classroom_service.GetScheduleByClassroomId: %w", err)
+		return nil, fmt.Errorf("classroom_service.GetScheduleByClassroomId: %w", services.GRPCToErrs(err))
 	}
 
 	schedules := make([]*models.Schedule, len(out.GetSchedules()))
@@ -45,7 +46,7 @@ func (c *ClassroomService) GetScheduleByTeacherId(ctx context.Context, teacherId
 	// validate id
 	err := models.ValidateID(teacherId)
 	if err != nil {
-		return nil, fmt.Errorf("classroom_service.GetScheduleByTeacherId: %w: %w", errs.ErrBadRequest, err)
+		return nil, fmt.Errorf("classroom_service.GetScheduleByTeacherId: %w: %w", errs.ErrBadRequest, services.GRPCToErrs(err))
 	}
 
 	// get schedule by teacher id
@@ -53,7 +54,7 @@ func (c *ClassroomService) GetScheduleByTeacherId(ctx context.Context, teacherId
 		TeacherId: teacherId,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("classroom_service.GetScheduleByTeacherId: %w", err)
+		return nil, fmt.Errorf("classroom_service.GetScheduleByTeacherId: %w", services.GRPCToErrs(err))
 	}
 
 	schedules := make([]*models.Schedule, len(out.GetSchedules()))
@@ -77,7 +78,7 @@ func (c *ClassroomService) CreateSchedule(ctx context.Context, request models.Sc
 	// validate request
 	err := models.ValidateScheduleRequest(request)
 	if err != nil {
-		return 0, fmt.Errorf("classroom_service.CreateSchedule: %w: %w", errs.ErrBadRequestBody, err)
+		return 0, fmt.Errorf("classroom_service.CreateSchedule: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// create schedule
@@ -91,7 +92,7 @@ func (c *ClassroomService) CreateSchedule(ctx context.Context, request models.Sc
 		AcademicYear: request.AcademicYear,
 	})
 	if err != nil {
-		return 0, fmt.Errorf("classroom_service.CreateSchedule: %w", err)
+		return 0, fmt.Errorf("classroom_service.CreateSchedule: %w", services.GRPCToErrs(err))
 	}
 
 	return out.GetClassId(), nil
@@ -101,7 +102,7 @@ func (c *ClassroomService) UpdateScheduleById(ctx context.Context, request model
 	// validate request
 	err := models.ValidateSchedule(request)
 	if err != nil {
-		return fmt.Errorf("classroom_service.UpdateScheduleById: %w: %w", errs.ErrBadRequestBody, err)
+		return fmt.Errorf("classroom_service.UpdateScheduleById: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// update schedule
@@ -116,7 +117,7 @@ func (c *ClassroomService) UpdateScheduleById(ctx context.Context, request model
 		AcademicYear: &request.AcademicYear,
 	})
 	if err != nil {
-		return fmt.Errorf("classroom_service.UpdateScheduleById: %w", err)
+		return fmt.Errorf("classroom_service.UpdateScheduleById: %w", services.GRPCToErrs(err))
 	}
 
 	return nil
@@ -126,7 +127,7 @@ func (c *ClassroomService) DeleteScheduleById(ctx context.Context, id int32) err
 	// validate id
 	err := models.ValidateID(id)
 	if err != nil {
-		return fmt.Errorf("classroom_service.DeleteScheduleById: %w: %w", errs.ErrBadRequest, err)
+		return fmt.Errorf("classroom_service.DeleteScheduleById: %w: %w", errs.ErrBadRequest, services.GRPCToErrs(err))
 	}
 
 	// delete schedule
@@ -134,7 +135,7 @@ func (c *ClassroomService) DeleteScheduleById(ctx context.Context, id int32) err
 		Id: id,
 	})
 	if err != nil {
-		return fmt.Errorf("classroom_service.DeleteScheduleById: %w", err)
+		return fmt.Errorf("classroom_service.DeleteScheduleById: %w", services.GRPCToErrs(err))
 	}
 
 	return nil

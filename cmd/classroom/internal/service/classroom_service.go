@@ -29,8 +29,8 @@ func (s *Service) GetClassroom(ctx context.Context, id int32) (*models.Classroom
 	return c, nil
 }
 
-func (s *Service) ListClassrooms(ctx context.Context, page, limit int32) ([]*models.Classroom, error) {
-	list, err := s.repo.List(ctx, page, limit)
+func (s *Service) ListClassrooms(ctx context.Context) ([]*models.Classroom, error) {
+	list, err := s.repo.List(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("classroom_service.ListClassrooms: %w", err)
 	}

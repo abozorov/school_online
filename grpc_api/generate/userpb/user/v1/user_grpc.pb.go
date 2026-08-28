@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserService_Get_FullMethodName           = "/school_online.user.v1.UserService/Get"
-	UserService_GetByEmail_FullMethodName    = "/school_online.user.v1.UserService/GetByEmail"
-	UserService_GetAll_FullMethodName        = "/school_online.user.v1.UserService/GetAll"
-	UserService_Create_FullMethodName        = "/school_online.user.v1.UserService/Create"
-	UserService_Update_FullMethodName        = "/school_online.user.v1.UserService/Update"
-	UserService_Delete_FullMethodName        = "/school_online.user.v1.UserService/Delete"
-	UserService_CreateSubject_FullMethodName = "/school_online.user.v1.UserService/CreateSubject"
-	UserService_UpdateSubject_FullMethodName = "/school_online.user.v1.UserService/UpdateSubject"
+	UserService_Get_FullMethodName            = "/school_online.user.v1.UserService/Get"
+	UserService_GetByEmail_FullMethodName     = "/school_online.user.v1.UserService/GetByEmail"
+	UserService_GetAll_FullMethodName         = "/school_online.user.v1.UserService/GetAll"
+	UserService_Create_FullMethodName         = "/school_online.user.v1.UserService/Create"
+	UserService_Update_FullMethodName         = "/school_online.user.v1.UserService/Update"
+	UserService_Delete_FullMethodName         = "/school_online.user.v1.UserService/Delete"
+	UserService_CreateSubject_FullMethodName  = "/school_online.user.v1.UserService/CreateSubject"
+	UserService_GetSubjectById_FullMethodName = "/school_online.user.v1.UserService/GetSubjectById"
+	UserService_GetAllSubjects_FullMethodName = "/school_online.user.v1.UserService/GetAllSubjects"
+	UserService_UpdateSubject_FullMethodName  = "/school_online.user.v1.UserService/UpdateSubject"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -35,11 +37,13 @@ const (
 type UserServiceClient interface {
 	Get(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	GetByEmail(ctx context.Context, in *GetByEmailRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
-	GetAll(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error)
+	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error)
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	Delete(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 	CreateSubject(ctx context.Context, in *CreateSubjectRequest, opts ...grpc.CallOption) (*CreateSubjectResponse, error)
+	GetSubjectById(ctx context.Context, in *GetSubjectByIdRequest, opts ...grpc.CallOption) (*GetSubjectByIdResponse, error)
+	GetAllSubjects(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllSubjectsResponse, error)
 	UpdateSubject(ctx context.Context, in *UpdateSubjectRequest, opts ...grpc.CallOption) (*UpdateSubjectResponse, error)
 }
 
@@ -71,7 +75,7 @@ func (c *userServiceClient) GetByEmail(ctx context.Context, in *GetByEmailReques
 	return out, nil
 }
 
-func (c *userServiceClient) GetAll(ctx context.Context, in *GetAllUsersRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error) {
+func (c *userServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllUsersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetAllUsersResponse)
 	err := c.cc.Invoke(ctx, UserService_GetAll_FullMethodName, in, out, cOpts...)
@@ -121,6 +125,26 @@ func (c *userServiceClient) CreateSubject(ctx context.Context, in *CreateSubject
 	return out, nil
 }
 
+func (c *userServiceClient) GetSubjectById(ctx context.Context, in *GetSubjectByIdRequest, opts ...grpc.CallOption) (*GetSubjectByIdResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSubjectByIdResponse)
+	err := c.cc.Invoke(ctx, UserService_GetSubjectById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) GetAllSubjects(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllSubjectsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllSubjectsResponse)
+	err := c.cc.Invoke(ctx, UserService_GetAllSubjects_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UpdateSubject(ctx context.Context, in *UpdateSubjectRequest, opts ...grpc.CallOption) (*UpdateSubjectResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateSubjectResponse)
@@ -137,11 +161,13 @@ func (c *userServiceClient) UpdateSubject(ctx context.Context, in *UpdateSubject
 type UserServiceServer interface {
 	Get(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	GetByEmail(context.Context, *GetByEmailRequest) (*GetUserResponse, error)
-	GetAll(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error)
+	GetAll(context.Context, *GetAllRequest) (*GetAllUsersResponse, error)
 	Create(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	Update(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	Delete(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	CreateSubject(context.Context, *CreateSubjectRequest) (*CreateSubjectResponse, error)
+	GetSubjectById(context.Context, *GetSubjectByIdRequest) (*GetSubjectByIdResponse, error)
+	GetAllSubjects(context.Context, *GetAllRequest) (*GetAllSubjectsResponse, error)
 	UpdateSubject(context.Context, *UpdateSubjectRequest) (*UpdateSubjectResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -159,7 +185,7 @@ func (UnimplementedUserServiceServer) Get(context.Context, *GetUserRequest) (*Ge
 func (UnimplementedUserServiceServer) GetByEmail(context.Context, *GetByEmailRequest) (*GetUserResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetByEmail not implemented")
 }
-func (UnimplementedUserServiceServer) GetAll(context.Context, *GetAllUsersRequest) (*GetAllUsersResponse, error) {
+func (UnimplementedUserServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllUsersResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAll not implemented")
 }
 func (UnimplementedUserServiceServer) Create(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
@@ -173,6 +199,12 @@ func (UnimplementedUserServiceServer) Delete(context.Context, *DeleteUserRequest
 }
 func (UnimplementedUserServiceServer) CreateSubject(context.Context, *CreateSubjectRequest) (*CreateSubjectResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateSubject not implemented")
+}
+func (UnimplementedUserServiceServer) GetSubjectById(context.Context, *GetSubjectByIdRequest) (*GetSubjectByIdResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSubjectById not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllSubjects(context.Context, *GetAllRequest) (*GetAllSubjectsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllSubjects not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateSubject(context.Context, *UpdateSubjectRequest) (*UpdateSubjectResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateSubject not implemented")
@@ -235,7 +267,7 @@ func _UserService_GetByEmail_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _UserService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllUsersRequest)
+	in := new(GetAllRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -247,7 +279,7 @@ func _UserService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: UserService_GetAll_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetAll(ctx, req.(*GetAllUsersRequest))
+		return srv.(UserServiceServer).GetAll(ctx, req.(*GetAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,6 +356,42 @@ func _UserService_CreateSubject_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetSubjectById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSubjectByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetSubjectById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetSubjectById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetSubjectById(ctx, req.(*GetSubjectByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_GetAllSubjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetAllSubjects(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetAllSubjects_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetAllSubjects(ctx, req.(*GetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UpdateSubject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateSubjectRequest)
 	if err := dec(in); err != nil {
@@ -376,6 +444,14 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateSubject",
 			Handler:    _UserService_CreateSubject_Handler,
+		},
+		{
+			MethodName: "GetSubjectById",
+			Handler:    _UserService_GetSubjectById_Handler,
+		},
+		{
+			MethodName: "GetAllSubjects",
+			Handler:    _UserService_GetAllSubjects_Handler,
 		},
 		{
 			MethodName: "UpdateSubject",

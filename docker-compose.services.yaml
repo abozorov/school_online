@@ -5,7 +5,6 @@ services:
       dockerfile: cmd/user/Dockerfile
     ports:
       - "5050:5050"
-    restart: unless-stopped
 
   classroom:
     build:
@@ -13,7 +12,6 @@ services:
       dockerfile: cmd/classroom/Dockerfile
     ports:
       - "5051:5051"
-    restart: unless-stopped
 
   raiting:
     build:
@@ -21,7 +19,6 @@ services:
       dockerfile: cmd/raiting/Dockerfile
     ports:
       - "5052:5052"
-    restart: unless-stopped
 
   api_gateway:
     build:
@@ -33,4 +30,3 @@ services:
       - user
       - classroom
       - raiting
-    restart: unless-stopped

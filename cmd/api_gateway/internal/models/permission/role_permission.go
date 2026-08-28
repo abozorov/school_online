@@ -8,6 +8,8 @@ var RolePermission = map[string]map[string]struct{}{
 		UserUpdate:            {},
 		UserDelete:            {},
 		SubjectCreate:         {},
+		SubjectUpdate:         {},
+		SubjectList:           {},
 		ClassroomView:         {},
 		ClassroomList:         {},
 		ClassroomCreate:       {},
@@ -26,12 +28,14 @@ var RolePermission = map[string]map[string]struct{}{
 		UserViewMe:            {},
 		ScheduleClassroomView: {},
 		JournalStudentViewMe:  {},
+		SubjectList:           {},
 	},
 
 	Parent: {
 		UserViewMe:            {},
 		ScheduleClassroomView: {},
 		JournalStudentViewMe:  {},
+		SubjectList:           {},
 	},
 
 	Teacher: {
@@ -43,6 +47,7 @@ var RolePermission = map[string]map[string]struct{}{
 		JournalGradeUpdate:      {},
 		JournalHomeworkUpdate:   {},
 		JournalAttendanceUpdate: {},
+		SubjectList:             {},
 	},
 
 	User: {},

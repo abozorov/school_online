@@ -68,11 +68,11 @@ func validateDateRange(value string) error {
 // @Security BearerAuth
 // @Produce json
 // @Param id path int true "Student ID"
-// @Param date_range query string true "Date range in format DD.MM.YYYY-DD.MM.YYYY"
+// @Param request body map[string]string true "Date range in format DD.MM.YYYY-DD.MM.YYYY"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
-// @Router /api/journal/student/{id} [get]
+// @Router /api/journal/student/{id} [post]
 func (h *Handler) GetJournalByStudentId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -83,7 +83,7 @@ func (h *Handler) GetJournalByStudentId(c *gin.Context) {
 	}
 
 	dataRange := make(map[string]string)
-	err = c.BindQuery(&dataRange)
+	err = c.ShouldBindJSON(&dataRange)
 	if err != nil {
 		h.logger.Error("raiting.GetJournalByStudentId: ", zap.String("error", err.Error()))
 		errsToHttp(c.Writer, errs.ErrBadRequest)
@@ -122,11 +122,11 @@ func (h *Handler) GetJournalByStudentId(c *gin.Context) {
 // @Security BearerAuth
 // @Produce json
 // @Param id path int true "Classroom ID"
-// @Param date_range query string true "Date range in format DD.MM.YYYY-DD.MM.YYYY"
+// @Param request body map[string]string true "Date range(date_range) in format DD.MM.YYYY-DD.MM.YYYY"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
-// @Router /api/journal/classroom/{id} [get]
+// @Router /api/journal/classroom/{id} [post]
 func (h *Handler) GetJournalByClassroomId(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -137,23 +137,23 @@ func (h *Handler) GetJournalByClassroomId(c *gin.Context) {
 	}
 
 	dataRange := make(map[string]string)
-	err = c.BindQuery(&dataRange)
+	err = c.ShouldBindJSON(&dataRange)
 	if err != nil {
-		h.logger.Error("raiting.GetJournalByStudentId: ", zap.String("error", err.Error()))
+		h.logger.Error("raiting.GetJournalByClassroomId: ", zap.String("error", err.Error()))
 		errsToHttp(c.Writer, errs.ErrBadRequest)
 		return
 	}
 
 	dateRange, ok := dataRange["date_range"]
 	if !ok {
-		h.logger.Error("raiting.GetJournalByStudentId: ", zap.String("error", "date_range query param is required"))
+		h.logger.Error("raiting.GetJournalByClassroomId: ", zap.String("error", "date_range query param is required"))
 		errsToHttp(c.Writer, errs.ErrBadRequest)
 		return
 	}
 
 	err = validateDateRange(dateRange)
 	if err != nil {
-		h.logger.Error("raiting.GetJournalByStudentId: ", zap.String("error", err.Error()))
+		h.logger.Error("raiting.GetJournalByClassroomId: ", zap.String("error", err.Error()))
 		errsToHttp(c.Writer, errs.ErrBadRequest)
 		return
 	}

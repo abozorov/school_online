@@ -9,6 +9,11 @@ run_user:
 run_classroom:
 	go run cmd/classroom/main.go
 
+run_raiting:
+	go run cmd/raiting/main.go
+
+run_frontend:
+	python3 -m http.server 3000 --directory frontend
 
 .PHONY:
 build_user_proto:

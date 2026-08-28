@@ -243,7 +243,7 @@ func ValidateScheduleRequest(req ScheduleRequest) error {
 // Interfaces
 type ClassroomService interface {
 	GetClassroom(ctx context.Context, id int32) (*Classroom, error)
-	ListClassrooms(ctx context.Context, page, limit int32) ([]*Classroom, error)
+	ListClassrooms(ctx context.Context) ([]*Classroom, error)
 	CreateClassroom(ctx context.Context, req ClassroomRequest) (int32, error)
 	UpdateClassroom(ctx context.Context, req Classroom) (int32, error)
 	DeleteClassroom(ctx context.Context, id int32) error
@@ -257,7 +257,7 @@ type ClassroomService interface {
 
 type ClassroomRepository interface {
 	Get(ctx context.Context, id int32) (*Classroom, error)
-	List(ctx context.Context, page, limit int32) ([]*Classroom, error)
+	List(ctx context.Context) ([]*Classroom, error)
 	Create(ctx context.Context, req ClassroomRequest) (int32, error)
 	Update(ctx context.Context, req Classroom) (int32, error)
 	Delete(ctx context.Context, id int32) error

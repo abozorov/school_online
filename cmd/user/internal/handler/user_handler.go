@@ -45,7 +45,7 @@ func (h *Handler) GetByEmail(ctx context.Context, request *userv1.GetByEmailRequ
 	return toProtoUser(user), nil
 }
 
-func (h *Handler) GetAll(ctx context.Context, request *userv1.GetAllUsersRequest) (*userv1.GetAllUsersResponse, error) {
+func (h *Handler) GetAll(ctx context.Context, request *userv1.GetAllRequest) (*userv1.GetAllUsersResponse, error) {
 	if request == nil {
 		return nil, status.Error(codes.InvalidArgument, "request is required")
 	}
@@ -104,6 +104,32 @@ func (h *Handler) CreateSubject(ctx context.Context, request *userv1.CreateSubje
 	return &userv1.CreateSubjectResponse{Id: id}, nil
 }
 
+func (h *Handler) GetSubjectById(ctx context.Context, request *userv1.GetSubjectByIdRequest) (*userv1.GetSubjectByIdResponse, error) {
+	if request == nil {
+		return nil, status.Error(codes.InvalidArgument, "request is required")
+	}
+	subject, err := h.service.GetSubjectById(ctx, request.GetId())
+	if err != nil {
+		return nil, responseErr(err)
+	}
+	return toProtoSubject(subject), nil
+}
+
+func (h *Handler) GetAllSubjects(ctx context.Context, request *userv1.GetAllRequest) (*userv1.GetAllSubjectsResponse, error) {
+	if request == nil {
+		return nil, status.Error(codes.InvalidArgument, "request is required")
+	}
+	subjects, err := h.service.GetAllSubjects(ctx)
+	if err != nil {
+		return nil, responseErr(err)
+	}
+	resp := &userv1.GetAllSubjectsResponse{Subjects: make([]*userv1.GetSubjectByIdResponse, 0, len(subjects))}
+	for _, subject := range subjects {
+		resp.Subjects = append(resp.Subjects, toProtoSubject(subject))
+	}
+	return resp, nil
+}
+
 func (h *Handler) UpdateSubject(ctx context.Context, request *userv1.UpdateSubjectRequest) (*userv1.UpdateSubjectResponse, error) {
 	if request == nil {
 		return nil, status.Error(codes.InvalidArgument, "request is required")
@@ -112,6 +138,17 @@ func (h *Handler) UpdateSubject(ctx context.Context, request *userv1.UpdateSubje
 		return nil, responseErr(err)
 	}
 	return &userv1.UpdateSubjectResponse{}, nil
+}
+
+func toProtoSubject(subject *models.Subject) *userv1.GetSubjectByIdResponse {
+	if subject == nil {
+		return &userv1.GetSubjectByIdResponse{}
+	}
+	return &userv1.GetSubjectByIdResponse{
+		Id:          subject.ID,
+		Name:        subject.Name,
+		Description: subject.Description,
+	}
 }
 
 func toProtoUser(user *models.User) *userv1.GetUserResponse {

@@ -8,12 +8,28 @@ option go_package = "github.com/abozorov/school_online/grpc_api/user;v1";
 service UserService {
         rpc Get(GetUserRequest) returns (GetUserResponse);
         rpc GetByEmail(GetByEmailRequest) returns (GetUserResponse);
-        rpc GetAll(GetAllUsersRequest) returns (GetAllUsersResponse);
+        rpc GetAll(GetAllRequest) returns (GetAllUsersResponse);
         rpc Create(CreateUserRequest) returns (CreateUserResponse);
         rpc Update(UpdateUserRequest) returns (UpdateUserResponse);
         rpc Delete(DeleteUserRequest) returns (DeleteUserResponse);
         rpc CreateSubject(CreateSubjectRequest) returns (CreateSubjectResponse);
+        rpc GetSubjectById(GetSubjectByIdRequest) returns (GetSubjectByIdResponse);
+        rpc GetAllSubjects(GetAllRequest) returns (GetAllSubjectsResponse);
         rpc UpdateSubject(UpdateSubjectRequest) returns (UpdateSubjectResponse);
+}
+
+message GetAllSubjectsResponse {
+        repeated GetSubjectByIdResponse subjects = 1;
+}
+
+message GetSubjectByIdRequest {
+        int32 id = 1;
+}
+
+message GetSubjectByIdResponse {
+        int32 id = 1;
+        string name = 2;
+        string description = 3;
 }
 
 message GetByEmailRequest {
@@ -79,7 +95,7 @@ message CreateUserResponse {
         int32 id = 1;
 }
 
-message GetAllUsersRequest {
+message GetAllRequest {
 }
 
 message GetAllUsersResponse {

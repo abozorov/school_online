@@ -26,7 +26,7 @@ func (c *ClassroomService) GetClassroomByID(ctx context.Context, id int32) (*mod
 	// validate id
 	err := models.ValidateID(id)
 	if err != nil {
-		return &models.Classroom{}, fmt.Errorf("classroom_service.GetClassroomByID: %w: %w", errs.ErrBadRequestBody, err)
+		return &models.Classroom{}, fmt.Errorf("classroom_service.GetClassroomByID: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// get classroom by id
@@ -34,7 +34,7 @@ func (c *ClassroomService) GetClassroomByID(ctx context.Context, id int32) (*mod
 		Id: id,
 	})
 	if err != nil {
-		return &models.Classroom{}, fmt.Errorf("classroom_service.GetClassroomByID: %w", err)
+		return &models.Classroom{}, fmt.Errorf("classroom_service.GetClassroomByID: %w", services.GRPCToErrs(err))
 	}
 
 	return &models.Classroom{
@@ -50,7 +50,7 @@ func (c *ClassroomService) List(ctx context.Context) ([]*models.Classroom, error
 	// get list of classrooms
 	classrooms, err := c.serviceManager.ClassroomService().ListClassrooms(ctx, &classroomv1.ListClassroomsRequest{})
 	if err != nil {
-		return nil, fmt.Errorf("classroom_service.List: %w", err)
+		return nil, fmt.Errorf("classroom_service.List: %w", services.GRPCToErrs(err))
 	}
 
 	// map to models.Classroom
@@ -72,7 +72,7 @@ func (c *ClassroomService) Create(ctx context.Context, request models.ClassroomR
 	// validate request
 	err := models.ValidateClassroomRequest(request)
 	if err != nil {
-		return 0, fmt.Errorf("classroom_service.Create: %w: %w", errs.ErrBadRequestBody, err)
+		return 0, fmt.Errorf("classroom_service.Create: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// create classroom
@@ -83,7 +83,7 @@ func (c *ClassroomService) Create(ctx context.Context, request models.ClassroomR
 		AcademicYear:      request.AcademicYear,
 	})
 	if err != nil {
-		return 0, fmt.Errorf("classroom_service.Create: %w", err)
+		return 0, fmt.Errorf("classroom_service.Create: %w", services.GRPCToErrs(err))
 	}
 
 	return out.GetId(), nil
@@ -93,7 +93,7 @@ func (c *ClassroomService) UpdateByID(ctx context.Context, request models.Classr
 	// validate request
 	err := models.ValidateClassroom(request)
 	if err != nil {
-		return fmt.Errorf("classroom_service.UpdateByID: %w: %w", errs.ErrBadRequestBody, err)
+		return fmt.Errorf("classroom_service.UpdateByID: %w: %w", errs.ErrBadRequestBody, services.GRPCToErrs(err))
 	}
 
 	// update classroom
@@ -105,7 +105,7 @@ func (c *ClassroomService) UpdateByID(ctx context.Context, request models.Classr
 		AcademicYear:      &request.AcademicYear,
 	})
 	if err != nil {
-		return fmt.Errorf("classroom_service.UpdateByID: %w", err)
+		return fmt.Errorf("classroom_service.UpdateByID: %w", services.GRPCToErrs(err))
 	}
 
 	return nil
@@ -115,7 +115,7 @@ func (c *ClassroomService) DeleteByID(ctx context.Context, id int32) error {
 	// validate id
 	err := models.ValidateID(id)
 	if err != nil {
-		return fmt.Errorf("classroom_service.DeleteByID: %w: %w", errs.ErrBadRequest, err)
+		return fmt.Errorf("classroom_service.DeleteByID: %w: %w", errs.ErrBadRequest, services.GRPCToErrs(err))
 	}
 
 	// delete classroom
@@ -123,7 +123,7 @@ func (c *ClassroomService) DeleteByID(ctx context.Context, id int32) error {
 		Id: id,
 	})
 	if err != nil {
-		return fmt.Errorf("classroom_service.DeleteByID: %w", err)
+		return fmt.Errorf("classroom_service.DeleteByID: %w", services.GRPCToErrs(err))
 	}
 
 	return nil

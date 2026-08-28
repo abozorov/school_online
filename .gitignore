@@ -31,3 +31,6 @@ vendor/
 *.env
 Dockerfile
 docker-compose.yaml
+
+# ai agents
+agents/

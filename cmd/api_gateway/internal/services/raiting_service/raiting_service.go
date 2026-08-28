@@ -27,7 +27,7 @@ func (r *RaitingService) GetJournalByStudentId(ctx context.Context, studentId in
 		Period: dateRange,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("raiting_service.GetJournalByStudentId: %w", err)
+		return nil, fmt.Errorf("raiting_service.GetJournalByStudentId: %w", services.GRPCToErrs(err))
 	}
 
 	out := make(map[string]map[string]string)
@@ -48,7 +48,7 @@ func (r *RaitingService) GetJournalByClassroomId(ctx context.Context, classroomI
 		Period: dateRange,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("raiting_service.GetJournalByClassroomId: %w", err)
+		return nil, fmt.Errorf("raiting_service.GetJournalByClassroomId: %w", services.GRPCToErrs(err))
 	}
 
 	out := make(map[string]map[string]map[string]string)
@@ -68,7 +68,7 @@ func (r *RaitingService) GetJournalByClassroomId(ctx context.Context, classroomI
 func (r *RaitingService) UpdateJournal(ctx context.Context, req models.Journal) error {
 	err := models.ValidateJournal(req)
 	if err != nil {
-		return fmt.Errorf("raiting_service.UpdateJournal: %w", err)
+		return fmt.Errorf("raiting_service.UpdateJournal: %w", services.GRPCToErrs(err))
 	}
 
 	_, err = r.serviceManager.RaitingService().UpdateGrade(ctx, &raitingv1.UpdateJournalRequest{
@@ -81,7 +81,7 @@ func (r *RaitingService) UpdateJournal(ctx context.Context, req models.Journal) 
 		Homework:   req.Homework,
 	})
 	if err != nil {
-		return fmt.Errorf("raiting_service.UpdateJournal: %w", err)
+		return fmt.Errorf("raiting_service.UpdateJournal: %w", services.GRPCToErrs(err))
 	}
 
 	return nil

@@ -17,6 +17,12 @@ type CreateSubjectRequest struct {
 	Description string `json:"description"`
 }
 
+type UpdateSubjectRequest struct {
+	ID          int32   `json:"id"`
+	Name        *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
 func ValidateSubjectName(name *string) error {
 	*name = strings.TrimSpace(*name)
 	if *name == "" {
@@ -52,6 +58,30 @@ func ValidateCreateSubjectRequest(req *CreateSubjectRequest) error {
 
 	if err := ValidateSubjectDescription(&req.Description); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func ValidateUpdateSubjectRequest(req *UpdateSubjectRequest) error {
+	if err := ValidateID(req.ID); err != nil {
+		return err
+	}
+
+	if req.Name != nil {
+		if err := ValidateSubjectName(req.Name); err != nil {
+			return err
+		}
+	}
+
+	if req.Description != nil {
+		if err := ValidateSubjectDescription(req.Description); err != nil {
+			return err
+		}
+	}
+
+	if req.Name == nil && req.Description == nil {
+		return errs.ErrBadRequestBody
 	}
 
 	return nil

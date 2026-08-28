@@ -75,6 +75,17 @@ func (s *Service) CreateSubject(ctx context.Context, name string, description st
 	return s.repo.CreateSubject(ctx, name, description)
 }
 
+func (s *Service) GetSubjectById(ctx context.Context, id int32) (*models.Subject, error) {
+	if id <= 0 {
+		return nil, models.ErrInvalidID
+	}
+	return s.repo.GetSubjectById(ctx, id)
+}
+
+func (s *Service) GetAllSubjects(ctx context.Context) ([]*models.Subject, error) {
+	return s.repo.GetAllSubjects(ctx)
+}
+
 func (s *Service) UpdateSubject(ctx context.Context, id int32, name string, description string) error {
 	if id <= 0 {
 		return models.ErrInvalidID
