@@ -5,9 +5,9 @@ import (
 
 	"github.com/abozorov/school_online/cmd/user/internal/models"
 	userv1 "github.com/abozorov/school_online/grpc_api/generate/userpb/user/v1"
+	"github.com/abozorov/school_online/pkg/errs"
 	"github.com/abozorov/school_online/pkg/logger"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
+	"go.uber.org/zap"
 )
 
 type Handler struct {
@@ -25,10 +25,12 @@ func New(logger *logger.Logger, service models.UserService) *Handler {
 
 func (h *Handler) Get(ctx context.Context, request *userv1.GetUserRequest) (*userv1.GetUserResponse, error) {
 	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		h.logger.Error("User microservice: Get", zap.String("error", errs.ErrBadRequest.Error()))
+		return nil, responseErr(errs.ErrBadRequest)
 	}
 	user, err := h.service.Get(ctx, request.GetId())
 	if err != nil {
+		h.logger.Error("User microservice: Get", zap.String("error", err.Error()))
 		return nil, responseErr(err)
 	}
 	return toProtoUser(user), nil
@@ -36,10 +38,12 @@ func (h *Handler) Get(ctx context.Context, request *userv1.GetUserRequest) (*use
 
 func (h *Handler) GetByEmail(ctx context.Context, request *userv1.GetByEmailRequest) (*userv1.GetUserResponse, error) {
 	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		h.logger.Error("User microservice: GetByEmail", zap.String("error", errs.ErrBadRequest.Error()))
+		return nil, responseErr(errs.ErrBadRequest)
 	}
 	user, err := h.service.GetByEmail(ctx, request.GetEmail())
 	if err != nil {
+		h.logger.Error("User microservice: GetByEmail", zap.String("error", err.Error()))
 		return nil, responseErr(err)
 	}
 	return toProtoUser(user), nil
@@ -47,10 +51,12 @@ func (h *Handler) GetByEmail(ctx context.Context, request *userv1.GetByEmailRequ
 
 func (h *Handler) GetAll(ctx context.Context, request *userv1.GetAllRequest) (*userv1.GetAllUsersResponse, error) {
 	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		h.logger.Error("User microservice: GetAll", zap.String("error", errs.ErrBadRequest.Error()))
+		return nil, responseErr(errs.ErrBadRequest)
 	}
 	users, err := h.service.GetAll(ctx)
 	if err != nil {
+		h.logger.Error("User microservice: GetAll", zap.String("error", err.Error()))
 		return nil, responseErr(err)
 	}
 	resp := &userv1.GetAllUsersResponse{Users: make([]*userv1.GetUserResponse, 0, len(users))}
@@ -62,11 +68,13 @@ func (h *Handler) GetAll(ctx context.Context, request *userv1.GetAllRequest) (*u
 
 func (h *Handler) Create(ctx context.Context, request *userv1.CreateUserRequest) (*userv1.CreateUserResponse, error) {
 	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		h.logger.Error("User microservice: Create", zap.String("error", errs.ErrBadRequest.Error()))
+		return nil, responseErr(errs.ErrBadRequest)
 	}
 
 	id, err := h.service.Create(ctx, toModelUser(request))
 	if err != nil {
+		h.logger.Error("User microservice: Create", zap.String("error", err.Error()))
 		return nil, responseErr(err)
 	}
 	return &userv1.CreateUserResponse{Id: id}, nil
@@ -74,10 +82,12 @@ func (h *Handler) Create(ctx context.Context, request *userv1.CreateUserRequest)
 
 func (h *Handler) Update(ctx context.Context, request *userv1.UpdateUserRequest) (*userv1.UpdateUserResponse, error) {
 	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		h.logger.Error("User microservice: Update", zap.String("error", errs.ErrBadRequest.Error()))
+		return nil, responseErr(errs.ErrBadRequest)
 	}
 
 	if err := h.service.Update(ctx, toUpdatedModelUser(request)); err != nil {
+		h.logger.Error("User microservice: Update", zap.String("error", err.Error()))
 		return nil, responseErr(err)
 	}
 	return &userv1.UpdateUserResponse{}, nil
@@ -85,70 +95,14 @@ func (h *Handler) Update(ctx context.Context, request *userv1.UpdateUserRequest)
 
 func (h *Handler) Delete(ctx context.Context, request *userv1.DeleteUserRequest) (*userv1.DeleteUserResponse, error) {
 	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		h.logger.Error("User microservice: Delete", zap.String("error", errs.ErrBadRequest.Error()))
+		return nil, responseErr(errs.ErrBadRequest)
 	}
 	if err := h.service.Delete(ctx, request.GetId()); err != nil {
+		h.logger.Error("User microservice: Delete", zap.String("error", err.Error()))
 		return nil, responseErr(err)
 	}
 	return &userv1.DeleteUserResponse{}, nil
-}
-
-func (h *Handler) CreateSubject(ctx context.Context, request *userv1.CreateSubjectRequest) (*userv1.CreateSubjectResponse, error) {
-	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
-	}
-	id, err := h.service.CreateSubject(ctx, request.GetName(), request.GetDescription())
-	if err != nil {
-		return nil, responseErr(err)
-	}
-	return &userv1.CreateSubjectResponse{Id: id}, nil
-}
-
-func (h *Handler) GetSubjectById(ctx context.Context, request *userv1.GetSubjectByIdRequest) (*userv1.GetSubjectByIdResponse, error) {
-	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
-	}
-	subject, err := h.service.GetSubjectById(ctx, request.GetId())
-	if err != nil {
-		return nil, responseErr(err)
-	}
-	return toProtoSubject(subject), nil
-}
-
-func (h *Handler) GetAllSubjects(ctx context.Context, request *userv1.GetAllRequest) (*userv1.GetAllSubjectsResponse, error) {
-	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
-	}
-	subjects, err := h.service.GetAllSubjects(ctx)
-	if err != nil {
-		return nil, responseErr(err)
-	}
-	resp := &userv1.GetAllSubjectsResponse{Subjects: make([]*userv1.GetSubjectByIdResponse, 0, len(subjects))}
-	for _, subject := range subjects {
-		resp.Subjects = append(resp.Subjects, toProtoSubject(subject))
-	}
-	return resp, nil
-}
-
-func (h *Handler) UpdateSubject(ctx context.Context, request *userv1.UpdateSubjectRequest) (*userv1.UpdateSubjectResponse, error) {
-	if request == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
-	}
-	if err := h.service.UpdateSubject(ctx, request.GetId(), request.GetName(), request.GetDescription()); err != nil {
-		return nil, responseErr(err)
-	}
-	return &userv1.UpdateSubjectResponse{}, nil
-}
-
-func toProtoSubject(subject *models.Subject) *userv1.GetSubjectByIdResponse {
-	if subject == nil {
-		return &userv1.GetSubjectByIdResponse{}
-	}
-	return &userv1.GetSubjectByIdResponse{
-		Id:          subject.ID,
-		Name:        subject.Name,
-		Description: subject.Description,
-	}
 }
 
 func toProtoUser(user *models.User) *userv1.GetUserResponse {

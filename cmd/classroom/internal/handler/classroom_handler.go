@@ -5,7 +5,6 @@ import (
 
 	"github.com/abozorov/school_online/cmd/classroom/internal/models"
 	classroomv1 "github.com/abozorov/school_online/grpc_api/generate/classroompb/classroom/v1"
-	"github.com/abozorov/school_online/pkg/errs"
 	"github.com/abozorov/school_online/pkg/logger"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,28 +23,10 @@ func New(logger *logger.Logger, service models.ClassroomService) *Handler {
 	}
 }
 
-func responseErr(err error) error {
-	if err == nil {
-		return nil
-	}
-	switch {
-	case err == errs.ErrBadRequest, err == errs.ErrBadRequestBody, err == errs.ErrBadRequestQuery,
-		err == models.ErrInvalidClassroomID, err == models.ErrInvalidGradeNumber, err == models.ErrInvalidClassroomLetter,
-		err == models.ErrInvalidTeacherID, err == models.ErrInvalidAcademicYear:
-		return status.Error(codes.InvalidArgument, err.Error())
-	case err == errs.ErrTimeoutExceeded:
-		return status.Error(codes.DeadlineExceeded, err.Error())
-	case err == errs.ErrNotFound:
-		return status.Error(codes.NotFound, err.Error())
-	default:
-		return status.Error(codes.Internal, err.Error())
-	}
-}
-
 // GetClassroom implements ClassroomServiceServer
 func (h *Handler) GetClassroom(ctx context.Context, req *classroomv1.GetClassroomRequest) (*classroomv1.ClassroomResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	c, err := h.service.GetClassroom(ctx, req.GetId())
 	if err != nil {
@@ -62,7 +43,7 @@ func (h *Handler) GetClassroom(ctx context.Context, req *classroomv1.GetClassroo
 
 func (h *Handler) ListClassrooms(ctx context.Context, req *classroomv1.ListClassroomsRequest) (*classroomv1.ListClassroomsResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	list, err := h.service.ListClassrooms(ctx)
 	if err != nil {
@@ -83,7 +64,7 @@ func (h *Handler) ListClassrooms(ctx context.Context, req *classroomv1.ListClass
 
 func (h *Handler) CreateClassroom(ctx context.Context, req *classroomv1.CreateClassroomRequest) (*classroomv1.CreateClassroomResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	id, err := h.service.CreateClassroom(ctx, models.ClassroomRequest{
 		GradeNumber:       req.GetGradeNumber(),
@@ -99,7 +80,7 @@ func (h *Handler) CreateClassroom(ctx context.Context, req *classroomv1.CreateCl
 
 func (h *Handler) UpdateClassroom(ctx context.Context, req *classroomv1.UpdateClassroomRequest) (*classroomv1.UpdateClassroomResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	c := models.Classroom{ID: req.GetId()}
 	if req.GradeNumber != nil {
@@ -123,7 +104,7 @@ func (h *Handler) UpdateClassroom(ctx context.Context, req *classroomv1.UpdateCl
 
 func (h *Handler) DeleteClassroom(ctx context.Context, req *classroomv1.DeleteClassroomRequest) (*classroomv1.DeleteClassroomResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	if err := h.service.DeleteClassroom(ctx, req.GetId()); err != nil {
 		return nil, responseErr(err)
@@ -133,7 +114,7 @@ func (h *Handler) DeleteClassroom(ctx context.Context, req *classroomv1.DeleteCl
 
 func (h *Handler) GetScheduleByClassroom(ctx context.Context, req *classroomv1.GetScheduleByClassroomRequest) (*classroomv1.ScheduleList, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	list, err := h.service.GetScheduleByClassroomId(ctx, req.GetClassId())
 	if err != nil {
@@ -157,7 +138,7 @@ func (h *Handler) GetScheduleByClassroom(ctx context.Context, req *classroomv1.G
 
 func (h *Handler) GetScheduleByTeacher(ctx context.Context, req *classroomv1.GetScheduleByTeacherRequest) (*classroomv1.ScheduleList, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	list, err := h.service.GetScheduleByTeacherId(ctx, req.GetTeacherId())
 	if err != nil {
@@ -181,7 +162,7 @@ func (h *Handler) GetScheduleByTeacher(ctx context.Context, req *classroomv1.Get
 
 func (h *Handler) CreateSchedule(ctx context.Context, req *classroomv1.CreateScheduleRequest) (*classroomv1.CreateScheduleResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	id, err := h.service.CreateSchedule(ctx, models.ScheduleRequest{
 		ClassroomID:  req.GetClassId(),
@@ -200,7 +181,7 @@ func (h *Handler) CreateSchedule(ctx context.Context, req *classroomv1.CreateSch
 
 func (h *Handler) UpdateSchedule(ctx context.Context, req *classroomv1.UpdateScheduleRequest) (*classroomv1.UpdateScheduleResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	s := models.Schedule{ID: req.GetId()}
 	if req.ClassId != nil {
@@ -232,7 +213,7 @@ func (h *Handler) UpdateSchedule(ctx context.Context, req *classroomv1.UpdateSch
 
 func (h *Handler) DeleteSchedule(ctx context.Context, req *classroomv1.DeleteScheduleRequest) (*classroomv1.DeleteScheduleResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "request is required")
+		return nil, status.Error(codes.InvalidArgument, "Classroom microservice: request is required")
 	}
 	if err := h.service.DeleteScheduleById(ctx, req.GetId()); err != nil {
 		return nil, responseErr(err)

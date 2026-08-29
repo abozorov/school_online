@@ -67,12 +67,6 @@ type TeacherRole struct {
 	Experience int32
 }
 
-type Subject struct {
-	ID          int32
-	Name        string
-	Description string
-}
-
 var (
 	ErrInvalidID          = errors.New("invalid id")
 	ErrInvalidName        = errors.New("invalid name")

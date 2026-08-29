@@ -19,78 +19,75 @@ func New(repo models.UserRepository) *Service {
 
 func (s *Service) Get(ctx context.Context, id int32) (*models.User, error) {
 	if id <= 0 {
-		return nil, models.ErrInvalidID
+		return nil, fmt.Errorf("user_service.Get: %w", models.ErrInvalidID)
 	}
-	return s.repo.Get(ctx, id)
+	u, err := s.repo.Get(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("user_service.Get: %w", err)
+	}
+	return u, nil
 }
 
 func (s *Service) GetByEmail(ctx context.Context, email string) (*models.User, error) {
 	if email == "" {
-		return nil, models.ErrEmptyEmail
+		return nil, fmt.Errorf("user_service.GetByEmail: %w", models.ErrEmptyEmail)
 	}
-	return s.repo.GetByEmail(ctx, email)
+	u, err := s.repo.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, fmt.Errorf("user_service.GetByEmail: %w", err)
+	}
+	return u, nil
 }
 
 func (s *Service) GetAll(ctx context.Context) ([]*models.User, error) {
-	return s.repo.GetAll(ctx)
+	u, err := s.repo.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("user_service.GetAll: %w", err)
+	}
+	return u, nil
 }
 
 func (s *Service) Create(ctx context.Context, user *models.User) (int32, error) {
 	if user == nil {
-		return 0, models.ErrInvalidID
+		return 0, fmt.Errorf("user_service.Create: %w", models.ErrInvalidID)
 	}
-	if err := validateUser(user, true); err != nil {
-		return 0, err
+	err := validateUser(user, true)
+	if err != nil {
+		return 0, fmt.Errorf("user_service.Create: %w", err)
 	}
-	return s.repo.Create(ctx, user)
+	id, err := s.repo.Create(ctx, user)
+	if err != nil {
+		return 0, fmt.Errorf("user_service.Create: %w", err)
+	}
+	return id, nil
 }
 
 func (s *Service) Update(ctx context.Context, user *models.User) error {
-	if user == nil {
-		return models.ErrInvalidID
+	if user == nil || user.ID <= 0 {
+		return fmt.Errorf("user_service.Update: %w", models.ErrInvalidID)
 	}
-	if user.ID <= 0 {
-		return models.ErrInvalidID
+
+	err := validateUser(user, false)
+	if err != nil {
+		return fmt.Errorf("user_service.Update: %w", err)
 	}
-	if err := validateUser(user, false); err != nil {
-		return err
+
+	err = s.repo.Update(ctx, user)
+	if err != nil {
+		return fmt.Errorf("user_service.Update: %w", err)
 	}
-	return s.repo.Update(ctx, user)
+	return nil
 }
 
 func (s *Service) Delete(ctx context.Context, id int32) error {
 	if id <= 0 {
-		return models.ErrInvalidID
+		return fmt.Errorf("user_service.Delete: %w", models.ErrInvalidID)
 	}
-	return s.repo.Delete(ctx, id)
-}
-
-func (s *Service) CreateSubject(ctx context.Context, name string, description string) (int32, error) {
-	if name == "" {
-		return 0, models.ErrInvalidName
+	err := s.repo.Delete(ctx, id)
+	if err != nil {
+		return fmt.Errorf("user_service.Delete: %w", err)
 	}
-	if description == "" {
-		return 0, fmt.Errorf("empty description")
-	}
-	return s.repo.CreateSubject(ctx, name, description)
-}
-
-func (s *Service) GetSubjectById(ctx context.Context, id int32) (*models.Subject, error) {
-	if id <= 0 {
-		return nil, models.ErrInvalidID
-	}
-	return s.repo.GetSubjectById(ctx, id)
-}
-
-func (s *Service) GetAllSubjects(ctx context.Context) ([]*models.Subject, error) {
-	return s.repo.GetAllSubjects(ctx)
-}
-
-func (s *Service) UpdateSubject(ctx context.Context, id int32, name string, description string) error {
-	if id <= 0 {
-		return models.ErrInvalidID
-	}
-	return s.repo.UpdateSubject(ctx, id, name, description)
+	return nil
 }
 
 func validateUser(user *models.User, requirePassword bool) error {
@@ -111,7 +108,23 @@ func validateUser(user *models.User, requirePassword bool) error {
 	}
 	if user.Role != "" {
 		switch user.Role {
-		case "user", "staff", "teacher", "student", "parent":
+		case "user":
+		case "staff":
+			if user.StaffRole == nil {
+				return models.ErrInvalidRole
+			}
+		case "teacher":
+			if user.TeacherRole == nil {
+				return models.ErrInvalidRole
+			}
+		case "student":
+			if user.StudentRole == nil {
+				return models.ErrInvalidRole
+			}
+		case "parent":
+			if user.ParentRole == nil {
+				return models.ErrInvalidRole
+			}
 		default:
 			return models.ErrInvalidRole
 		}

@@ -162,7 +162,7 @@ func ValidatePhoneNumber(phone *string) error {
 		return nil
 	}
 
-	if len(*phone) < 10 || len(*phone) > 12 {
+	if len(*phone) != 12 {
 		return ErrInvalidPhoneNumber
 	}
 
